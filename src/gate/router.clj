@@ -2,20 +2,10 @@
   (:require [gate.response :as response]))
 
 (defn ^:private shares-method?
-  "True if route has same method as request, or if route method is :any."
   [request-method]
   (fn [route]
     (let [route-method (get route :method)]
-      (case route-method
-        :any           true
-        request-method true
-                       false))))
-
-(defn ^:private shares-method?
-  [request-method]
-  (fn [route]
-    (let [route-method (get route :method)]
-      (or (= request-method :any)
+      (or (= route-method :any)
           (= request-method route-method)
           false))))
 

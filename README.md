@@ -127,7 +127,7 @@ Route
     "/". Follows convention that "/:..." matches a sub-path, and
     "/*..." is a catch-all.
 
-  :get|:post|:head|:put|:delete|:trace|:connect|:options
+  :get|:post|:head|:put|:delete|:trace|:connect|:options|:any
     (Optional, Fn|{:handler Fn :middleware [Fn]})
     A keyword representing an HTTP method is paired with either
     an uncalled function representing a handler, or a map with

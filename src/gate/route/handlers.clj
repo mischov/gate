@@ -1,7 +1,7 @@
 (ns gate.route.handlers)
 
 (def request-methods #{:get :post :head :put :delete
-                       :trace :connect :options})
+                       :trace :connect :options :any})
 
 (defn read-fn
   [f]
