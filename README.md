@@ -36,15 +36,19 @@ Add the following dependency to your `project.clj` file:
 
 ## Rationale
 
-Clojure data structures make better routes than Clojure macros.
+1. Clojure data structures make better routes than Clojure macros.
 
-Using data structures for routes not only makes it easier to generate, nest, combine, and otherwise manipulate routes (you've got a whole language of tools at your disposal), but also makes it easier to apply middleware granularly (and will make it easier to implement reverse routing in the future).
+   Using data structures for routes not only makes it easier to generate, nest, combine, and otherwise manipulate routes (you've got a whole language of tools at your disposal), but also makes it easier to apply middleware granularly (and will make it easier to implement reverse routing in the future).
 
-Some libraries (such as Polaris and Pedestal) are already taking advantage of the benefits gained by using data structures to represent routes, but they tend to favor vector-based routes ahead of map-based routes.
+2. Maps are clearer representations of routes than vectors.
+   
+   Some libraries (such as Polaris and Pedestal) are already taking advantage of the benefits gained by using data structures to represent routes, but they tend to favor vector-based routes ahead of map-based routes.
 
-Gate favors map-based routes, which are more explicit and hopefully more maintainable.
+  Gate favors map-based routes, whose explicit nature are hopefully more maintainable.
 
-Gate also plays very nicely with existing ring middleware.
+3. Granular application of middleware is really useful.
+  
+   Gate not only plays very nicely with existing ring middleware, it attempts to improve the experience by allowing users to apply a middleware to a single route or even a single method of a route, in addition to being able to apply middleware to a whole app or group of routes. Gate also makes it easy to combine middleware that needs to be used together into a single middleware.
 
 [**Back To Top ⇧**](#contents)
 
@@ -62,7 +66,8 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 (ns yourproj.quickstart
   (:require [gate :refer [defrouter]]))
 
-;; A handler is some function that accepts a request.
+;; A handler is some function that accepts a Ring request.
+;; Gate tries to turn whatever it returns into a Ring response.
 (defn greeter
   [req]
   (let [name (get-in req [:params :name])]
