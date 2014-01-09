@@ -9,7 +9,7 @@ Gate is a web routing library for Ring and Clojure.
 (defrouter app
   [{:name :hello
     :path "/"
-    :get (fn [_] "<h1>Hello, World!</h1>")}}]
+    :get  (fn [_] "<h1>Hello, World!</h1>")}}]
   {:on-404 (fn [_] "<h1>404</h1><p>Not Found</p>")}) 
 ```
 
@@ -86,11 +86,12 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 (def quickstart-routes
   [{:name :hello-world
     :path "/"
-    :get (fn [_] "Hello, World!")}
+    :get  (fn [_] "Hello, World!")
+    :post (fn [_] "None of that now, you hear!")}
    {:name :hello-person
     :path "/:name"
     :middleware [enthusiator]
-    :get greeter}])
+    :get  greeter}])
 
 ;; A router takes a sequence of routes and an optional map
 ;; of router settings.
@@ -182,11 +183,11 @@ Currently Gate middleware is just standard ring middleware, but Gate does a few 
 (def post-routes
   {:name :view-post
    :path "/:post-id"
-   :get view-post
+   :get  view-post
    :children [{:name :edit-post
                :path "/edit"
                :middleware [require-admin]
-               :get view-edit-post
+               :get  view-edit-post
                :post edit-post}]})
 
 ;; Child routes also inherit middleware from their parents.
