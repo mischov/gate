@@ -22,6 +22,7 @@ Gate is a web routing library for Ring and Clojure.
 - [Documentation](#documentation)
     - [Routes](#routes)
     - [Middleware](#middleware)
+- [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
 ## Installation
@@ -199,6 +200,12 @@ Currently Gate middleware is just standard ring middleware, but Gate does a few 
 ;; :middleware in the settings map of create-router or defrouter. 
   
 ```
+[**Back To Top ⇧**](#contents)
+
+## Performance
+
+A couple of entirely unscientific `ab` tests suggest that Gate and Compojure have very similar performance when it comes to routing a request, so Gate shouldn't slow you down.
+
 [**Back To Top ⇧**](#contents)
 
 ## Acknowledgements
