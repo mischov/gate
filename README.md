@@ -48,7 +48,7 @@ Add the following dependency to your `project.clj` file:
 
 3. Granular application of middleware is really useful.
   
-   Gate not only plays very nicely with existing ring middleware, it attempts to improve the experience by allowing users to apply a middleware to a single route or even a single method of a route, in addition to being able to apply middleware to a whole app or group of routes. Gate also makes it easy to combine middleware that needs to be used together into a single middleware.
+   Gate not only plays very nicely with existing ring middleware, it attempts to improve the experience by allowing users to easily apply a middleware to a single route or even a single method of a route, in addition to being able to apply middleware to a whole app or group of routes. Gate also makes it easy to combine middleware that needs to be used together into a single middleware.
 
 [**Back To Top ⇧**](#contents)
 
@@ -185,9 +185,9 @@ Currently Gate middleware is just standard ring middleware, but Gate does a few 
    :get view-post
    :children [{:name :edit-post
                :path "/edit"
-	       :middleware [require-admin]
-	       :get view-edit-post
-	       :post edit-post}]})
+               :middleware [require-admin]
+               :get view-edit-post
+               :post edit-post}]})
 
 ;; Child routes also inherit middleware from their parents.
 ;; In the example above, if :view-post had the middleware
