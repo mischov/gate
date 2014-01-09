@@ -4,6 +4,27 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [gate.route.handlers :as handlers]))
 
+(defn ^:private uniquely-add
+  [middleware middlewares]
+  (if (some #{middleware} middlewares)
+    middlewares
+    (conj middlewares middleware)))
+
+(defn ^:private dedup-middlewares
+  [middlewares]
+  (loop [m (first middlewares)
+         ms (next middlewares)
+         result []]
+    (if-not ms
+      (uniquely-add m result)
+      (recur (first ms) (next ms) (uniquely-add m result)))))
+
+(defn wrap-handler
+  [handler middlewares]
+  (let [middlewares (dedup-middlewares middlewares)
+        wrapper (apply comp middlewares)]
+    (wrapper handler)))
+
 (defn combine
   "Combines middlewares. Middleware will be called left to right."
   [& middlewares]

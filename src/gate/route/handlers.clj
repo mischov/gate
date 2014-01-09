@@ -1,19 +1,12 @@
-(ns gate.route.handlers)
+(ns gate.route.handlers
+  (:require [gate.middleware :as middleware]))
 
 (def request-methods #{:get :post :head :put :delete
                        :trace :connect :options :any})
 
-(defn read-fn
-  [f]
-  (cond
-   (symbol? f) @(resolve f)
-   (seq? f) (eval f)
-   (fn? f) f))
-
 (defn create-action
-  [handler middleware]
-  (let [wrapper (apply comp middleware)
-        wrapped-handler (wrapper handler)]
+  [handler middlewares]
+  (let [wrapped-handler (middleware/wrap-handler handler middlewares)]
     (fn [req]
       (wrapped-handler req))))
 
@@ -23,22 +16,22 @@
 (extend-protocol Handler
   clojure.lang.IFn
   (read-handler
-    [handler middleware]
+    [handler middlewares]
     {:handler handler
-     :action (create-action handler middleware)})
+     :action (create-action handler middlewares)})
   clojure.lang.APersistentMap
   (read-handler
-    [handler middleware]
+    [handler middlewares]
     (let [h (get handler :handler)
           m (get handler :middleware)]
         {:handler h
-         :action (create-action h (concat middleware m))})))
+         :action (create-action h (concat middlewares m))})))
 
 (defn expand-handlers
   [route]
   (when-let [handlers (filter #(request-methods (first %))  route)]
     (let [r (into {} (filter #(not (request-methods (first %))) route))
-          middleware (get route :middleware)]
+          middlewares (get route :middleware)]
       (for [[method handler] handlers]
-          (let [rh (read-handler handler middleware)]
+          (let [rh (read-handler handler middlewares)]
             (merge r rh {:method method}))))))

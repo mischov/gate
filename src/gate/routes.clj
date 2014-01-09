@@ -18,17 +18,13 @@
     (-> (path/parse-path p parent-dna)
         (update-in [:path] str p))))
 
-(defn ^:private read-fns
-  [fs]
-  (map handlers/read-fn fs))
-
 (defn ^:private update-dna-middleware
   "Combines route and parent middleware then add the result to
    current-dna."
   [current-dna route]
   (let [m  (get route :middleware)
         pm (get current-dna :middleware)]
-    (assoc current-dna :middleware (concat pm (read-fns m)))))
+    (assoc current-dna :middleware (concat pm m))))
 
 (defn ^:private create-route-dna
   "Creates dna for current route."

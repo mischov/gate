@@ -44,7 +44,7 @@ Add the following dependency to your `project.clj` file:
    
    Some libraries (such as Polaris and Pedestal) are already taking advantage of the benefits gained by using data structures to represent routes, but they tend to favor vector-based routes ahead of map-based routes.
 
-  Gate favors map-based routes, whose explicit nature are hopefully more maintainable.
+  Gate favors map-based routes, whose explicit nature is hopefully more maintainable.
 
 3. Granular application of middleware is really useful.
   
