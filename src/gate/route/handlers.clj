@@ -19,7 +19,7 @@
     [handler middlewares]
     {:handler handler
      :action (create-action handler middlewares)})
-  clojure.lang.APersistentMap
+  clojure.lang.IPersistentMap
   (read-handler
     [handler middlewares]
     (let [h (get handler :handler)
