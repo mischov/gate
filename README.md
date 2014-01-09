@@ -134,7 +134,9 @@ Route
     Route handlers accept a request.
 
   :children
-    (Optional, [Concise-Route-Map])
+    (Optional, [Route])
+    A seq of other routes. Children share path and middleware with
+    their parents.
 ```
 [**Back To Top ⇧**](#contents)
 
