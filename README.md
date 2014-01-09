@@ -9,7 +9,7 @@ Gate is a web routing library for Ring and Clojure.
 (defrouter app
   [{:name :hello
     :path "/"
-    :handlers {:get (fn [_] "<h1>Hello, World!</h1>")}}}]
+    :get (fn [_] "<h1>Hello, World!</h1>")}}]
   {:on-404 (fn [_] "<h1>404</h1><p>Not Found</p>")}) 
 ```
 
@@ -81,11 +81,11 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 (def quickstart-routes
   [{:name :hello-world
     :path "/"
-    :handlers {:get (fn [_] "Hello, World!")}}
+    :get (fn [_] "Hello, World!")}
    {:name :hello-person
     :path "/:name"
     :middleware [enthusiator]
-    :handlers {:get greeter}}])
+    :get greeter}])
 
 ;; A router takes a sequence of routes and an optional map
 ;; of router settings.
@@ -106,7 +106,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ### Routes
 
-A Gate route is a Clojure map consisting of two required fields (`:name` and `:path`) and three optional fields (`:middleware`, `:handlers`, and `children`).
+A Gate route is a Clojure map consisting of two required fields (`:name` and `:path`), a variable number of optional request-method fields (ie `:get`, `:post`, etc) and two other optional fields (`:middleware` and `children`).
 
 ```
 Route
@@ -121,17 +121,20 @@ Route
     "/". Follows convention that "/:..." matches a sub-path, and
     "/*..." is a catch-all.
 
+  :get|:post|:head|:put|:delete|:trace|:connect|:options
+    (Optional, Fn|{:handler Fn :middleware [Fn]})
+    A keyword representing an HTTP method is paired with either
+    an uncalled function representing a handler, or a map with
+    the keys :handler and :middleware. :handler is an uncalled
+    handler function, :middleware is a sequence of uncalled ring
+    middleware functions.
+
+    More than one of http-method key can be included in a
+    route.
+  
   :middleware
     (Optional, [Fn])
-    A sequence of uncalled functions. More specificially, a
-    sequence of uncalled ring middleware functions.
-    
-  :handlers
-    (Optional, {Keyword, Fn})
-    A map of keywords representing http methods (ie. :get :post),
-    to uncalled functions representing route handlers.
-
-    Route handlers accept a request.
+    A sequence of uncalled ring middleware functions. 
 
   :children
     (Optional, [Route])
@@ -174,12 +177,12 @@ Currently Gate middleware is just standard ring middleware, but Gate does a few 
 (def post-routes
   {:name :view-post
    :path "/:post-id"
-   :handlers {:get view-post}
+   :get view-post
    :children [{:name :edit-post
-   	       :path "/edit"
+               :path "/edit"
 	       :middleware [require-admin]
-	       :handlers {:get view-edit-post
-	         	  :post edit-post}}]})
+	       :get view-edit-post
+	       :post edit-post}]})
 
 ;; Child routes also inherit middleware from their parents.
 ;; In the example above, if :view-post had the middleware
