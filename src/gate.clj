@@ -1,11 +1,26 @@
 (ns gate
-  (:require [gate.routes :refer [expand-routes default-dna]]
-            [gate.router :refer [create-router]]))
+  (:require [gate.routes :as routes]
+            [gate.router :as router]))
+
+(def expand-routes routes/expand-routes)
+(def create-router router/create-router)
+
+(defn get-settings
+  [opts]
+  (if-let [settings (first opts)] settings {}))
+
+(defn prepare-dna
+  [default-dna settings]
+  (if-let [middleware (get settings :middleware)]
+    (assoc default-dna :middleware middleware)
+    default-dna))
 
 (defmacro defroutes
   "Expands a sequence of routes at compile times."
-  [name routes]
-  `(def ~name (expand-routes ~routes)))
+  [name routes & opts]
+  (let [settings (get-settings opts)
+        dna (prepare-dna routes/default-dna settings)]
+    `(def ~name (expand-routes ~routes ~dna))))
 
 (defmacro defrouter
   "Expands a sequence of user-defined routes and creates
@@ -17,8 +32,7 @@
    use it with defroutes which will also expand routes at compile
    time."
   [name routes & opts]
-  (let [options (if-let [o (first opts)] o {})
-        dna (if-let [middleware (get options :middleware)]
-              (assoc default-dna :middleware middleware)
-              default-dna)]
-    `(def ~name (create-router (expand-routes ~routes ~dna) ~options))))
+  (let [settings (get-settings opts)
+        dna (prepare-dna routes/default-dna settings)]
+    `(def ~name
+       (create-router (expand-routes ~routes ~dna) ~settings))))
