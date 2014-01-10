@@ -1,5 +1,7 @@
 (ns gate.router
-  (:require [gate.response :as response]))
+  (:require [gate.response :as response]
+            [ring.util.response :refer [resource-response]]
+            [ring.middleware.content-type :refer [content-type-response]]))
 
 (defn ^:private shares-method?
   [request-method]
@@ -12,6 +14,26 @@
 (defn ^:private expand-path-params
   [path-params]
   {:params path-params :path-params path-params})
+
+(defn set-content-type
+  [response request]
+  (let [resp (content-type-response response request)]
+    (when (get resp :status)
+      resp)))
+
+(defn ^:private resource-matcher
+  [request resource-settings]
+  (let [uri (get request :uri)]
+    (when (re-find #"\.[A-Za-z]+" uri)
+        (let [default-settings {:path "/" :root "public"}
+              {:keys [path root]} (merge default-settings
+                                         resource-settings)
+              full-path (str root "/" (clojure.string/replace-first uri
+                                                                    path
+                                                                    ""))]
+          (-> (resource-response full-path)
+              (set-content-type request)
+              )))))
 
 (defn ^:private find-matching
   [request {:keys [matcher action] :as route}]
@@ -33,13 +55,12 @@
    Options:
              :not-found - "
   ([routes] (create-router routes {}))
-  ([routes {:keys [on-404]
+  ([routes {:keys [on-404 resources]
             :or {on-404 "404: Not Found"}
             :as settings}]
      (fn [request]
        (let [request-method (get request :request-method)
              routes (filter (shares-method? request-method) routes)]
-         (or (some #(find-matching request %) routes)
+         (or (when resources (resource-matcher request resources))
+             (some #(find-matching request %) routes)
              (issue-404 on-404 request))))))
-
-

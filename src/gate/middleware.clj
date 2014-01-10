@@ -1,8 +1,7 @@
 (ns gate.middleware
   (:require [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.nested-params :refer [wrap-nested-params]]
-            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [gate.route.handlers :as handlers]))
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]))
 
 (defn ^:private uniquely-add
   [middleware middlewares]
@@ -23,7 +22,9 @@
   [handler middlewares]
   (let [middlewares (dedup-middlewares middlewares)
         wrapper (apply comp middlewares)]
-    (wrapper handler)))
+    (if wrapper
+      (wrapper handler)
+      handler)))
 
 (defn combine
   "Combines middlewares. Middleware will be called left to right."

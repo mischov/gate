@@ -5,10 +5,6 @@
 (def expand-routes routes/expand-routes)
 (def create-router router/create-router)
 
-(defn get-settings
-  [opts]
-  (if-let [settings (first opts)] settings {}))
-
 (defn prepare-dna
   [default-dna settings]
   (if-let [middleware (get settings :middleware)]
@@ -17,9 +13,8 @@
 
 (defmacro defroutes
   "Expands a sequence of routes at compile times."
-  [name routes & opts]
-  (let [settings (get-settings opts)
-        dna (prepare-dna routes/default-dna settings)]
+  [name routes & [settings]]
+  (let [dna (prepare-dna routes/default-dna settings)]
     `(def ~name (expand-routes ~routes ~dna))))
 
 (defmacro defrouter
@@ -31,8 +26,7 @@
    at compile time, so if you wish to use create-router directly,
    use it with defroutes which will also expand routes at compile
    time."
-  [name routes & opts]
-  (let [settings (get-settings opts)
-        dna (prepare-dna routes/default-dna settings)]
+  [name routes & [settings]]
+  (let [dna (prepare-dna routes/default-dna settings)]
     `(def ~name
        (create-router (expand-routes ~routes ~dna) ~settings))))

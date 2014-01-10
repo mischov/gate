@@ -22,6 +22,7 @@ Gate is a web routing library for Ring and Clojure.
 - [Documentation](#documentation)
     - [Routes](#routes)
     - [Middleware](#middleware)
+    - [Resources](#resources)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
@@ -97,7 +98,8 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 ;; of router settings.
 (defrouter router
   quickstart-routes
-  {:on-404 (fn [_] "There's nothing there....")})
+  {:on-404 (fn [_] "There's nothing there....")
+   :resources {:path "/" :root "public"}})
 
 ;; Run routers like you would run any ring handler.
 ;; For instance, if you wanted to run this with lein-ring you'd
@@ -213,9 +215,21 @@ Currently Gate middleware is just standard ring middleware, but Gate does a few 
 ```
 [**Back To Top ⇧**](#contents)
 
+### Resources
+
+Gate does not route to static resources by default.
+
+If you'd like Gate to route to static resource, add a `:resources` map to the settings map of either `defrouter` or `create-router`.
+
+The `:resources` key can contain a `:path` key and a `:root` key, but even just pairing `:resources` with an empty map will instruct Gate to serve static resources.
+
+Unless told otherwise, Gate assumes that you are serving resources from path "/" and that those resources can be found in resources/public (which is :root "public").
+
+[**Back To Top ⇧**](#contents)
+
 ## Performance
 
-A couple of entirely unscientific `ab` tests suggest that Gate and Compojure have very similar performance when it comes to routing a request, so Gate shouldn't slow you down.
+A couple of entirely unscientific `ab` tests suggest that Gate and Compojure have very similar performance when it comes to routing a request.
 
 [**Back To Top ⇧**](#contents)
 
