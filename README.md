@@ -31,7 +31,7 @@ Gate is a web routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.3"]
+[gate "0.0.4"]
 ```
 [**Back To Top ⇧**](#contents)
 
@@ -221,7 +221,7 @@ Gate does not route to static resources by default.
 
 If you'd like Gate to route to static resource, add a `:resources` map to the settings map of either `defrouter` or `create-router`.
 
-The `:resources` key can contain a `:path` key and a `:root` key, but even just pairing `:resources` with an empty map will instruct Gate to serve static resources.
+The `:resources` map can contain a `:path` key and a `:root` key, but even just pairing `:resources` with an empty map will instruct Gate to serve static resources.
 
 Unless told otherwise, Gate assumes that you are serving resources from path "/" and that those resources can be found in resources/public (which is :root "public").
 
