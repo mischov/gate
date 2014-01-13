@@ -32,7 +32,7 @@ Gate is a web routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.4"]
+[gate "0.0.5"]
 ```
 [**Back To Top ⇧**](#contents)
 
@@ -170,7 +170,7 @@ Gate handlers are any function that accepts a request and returns something.
     (str "Hello, " name ". I am a handler.")))
 ```
 
-But manually retrieving params from the request like that means writing the same boilerplate over and over, and that's no fun. Luckily, there's a macro for that: gate.handler/defhandler.
+But manually retrieving params from the request like that means writing the same boilerplate over and over, and that's no fun. Luckily, there's a macro for that: gate.handler/defhandler. The following example creates exactly the same handler as the example above.
 
 ```clojure
 (defhandler
@@ -178,7 +178,7 @@ But manually retrieving params from the request like that means writing the same
   (str "Hello, " name ". I am a handler."))
 ```
 
-Another pattern also emerges when you have to write handlers a lot, namely, that you end up needing to read a param (which is always a string) into some other kind of data so that you app can use it.
+Another pattern that emerges when you write handlers a lot is that you end up needing to transform a param (which is always a string) into some other kind of data so that your app can use it.
 
 In the following example, the function `get-user` requires a user-id as a number. Usually you would have to call `Integer/parseInt` or some similar function on your user-id param before you could pass it to `get-user`, but `defhandler` can make that conversion for you.
 
@@ -189,7 +189,8 @@ In the following example, the function `get-user` requires a user-id as a number
     (render-profile user))
 ```
 
-You can currently define a param as `:num`, `:int`, `:decimal`, or `:keyword` and defhandler will convert that parameter to the given type.
+There are four methods of conversion currently.
+
 
 ```
   :num
@@ -197,7 +198,8 @@ You can currently define a param as `:num`, `:int`, `:decimal`, or `:keyword` an
 
     Warning: If your number starts with zero but doesn't
     contain a decimal point, :num will think it is an
-    octal.
+    octal. If it wasn't supposed to be an octal, bad
+    things will start happening.
 
   :int
     Attempts to read a parameter into a long, which is the
