@@ -21,6 +21,7 @@ Gate is a web routing library for Ring and Clojure.
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
     - [Routes](#routes)
+    - [Handlers](#handlers)
     - [Middleware](#middleware)
     - [Resources](#resources)
 - [Performance](#performance)
@@ -65,14 +66,21 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ```clojure
 (ns yourproj.quickstart
-  (:require [gate :refer [defrouter]]))
+  (:require [gate :refer [defrouter]]
+            [gate.handler :refer [defhandler]]))
 
 ;; A handler is some function that accepts a Ring request.
 ;; Gate tries to turn whatever it returns into a Ring response.
-(defn greeter
+(defn hello-handler
   [req]
-  (let [name (get-in req [:params :name])]
-    (str "Hello, " name "!")))
+  "Hello, World!")
+
+;; Since it's no fun to manually pull params out of requests,
+;; Gate also provides a convinence macro, defhandler, to make
+;; it easy to access parameters.
+(defhandler greeter
+  [name]
+  (str "Hello, " name "!"))
 
 ;; Middleware is standard Ring middleware, it accepts
 ;; a handler and returns a function that accepts a request.
@@ -87,7 +95,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 (def quickstart-routes
   [{:name :hello-world
     :path "/"
-    :get  (fn [_] "Hello, World!")
+    :get  hello-handler
     :post (fn [_] "None of that now, you hear!")}
    {:name :hello-person
     :path "/:name"
@@ -98,7 +106,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 ;; of router settings.
 (defrouter router
   quickstart-routes
-  {:on-404 (fn [_] "There's nothing there....")
+  {:on-404 (fn [_] "There's nothing here....")
    :resources {:path "/" :root "public"}})
 
 ;; Run routers like you would run any ring handler.
@@ -148,6 +156,59 @@ Route
     (Optional, [Route])
     A seq of other routes. Children share path and middleware with
     their parents.
+```
+[**Back To Top ⇧**](#contents)
+
+### Handlers
+
+Gate handlers are any function that accepts a request and returns something.
+
+```clojure
+(defn a-handler
+  [request]
+  (let [name (get-in request [:params :name])]
+    (str "Hello, " name ". I am a handler.")))
+```
+
+But manually retrieving params from the request like that means writing the same boilerplate over and over, and that's no fun. Luckily, there's a macro for that: gate.handler/defhandler.
+
+```clojure
+(defhandler
+  [name]
+  (str "Hello, " name ". I am a handler."))
+```
+
+Another pattern also emerges when you have to write handlers a lot, namely, that you end up needing to read a param (which is always a string) into some other kind of data so that you app can use it.
+
+In the following example, the function `get-user` requires a user-id as a number. Usually you would have to call `Integer/parseInt` or some similar function on your user-id param before you could pass it to `get-user`, but `defhandler` can make that conversion for you.
+
+```clojure
+(defhandler get-user-profile
+  [[user-id :int]]
+  (let [user (get-user user-id)]
+    (render-profile user))
+```
+
+You can currently define a param as `:num`, `:int`, `:decimal`, or `:keyword` and defhandler will convert that parameter to the given type.
+
+```
+  :num
+    Attempts to read a parameter as a number of any kind.
+
+    Warning: If your number starts with zero but doesn't
+    contain a decimal point, :num will think it is an
+    octal.
+
+  :int
+    Attempts to read a parameter into a long, which is the
+    standard Clojure representation of an integer.
+
+  :decimal
+    Attempts to read a parameter into a double, which is
+    the standard Clojure representation of a decimal.
+
+  :keyword
+    Attempts to read a parameter into a lowercase keyword.
 ```
 [**Back To Top ⇧**](#contents)
 
