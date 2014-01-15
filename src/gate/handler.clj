@@ -59,17 +59,17 @@
          (throw (Exception. (str "Unexpected binding: " sym))))
       (mapcat identity bindings))))
 
-(defmacro ^:private let-request [[bindings request] & body]
+(defmacro let-request [[bindings request] & body]
   (if (vector? bindings)
     `(let [~@(vector-bindings bindings request)] ~@body)
     `(let [~bindings ~request] ~@body)))
 
-(defn ^:private compile-handler
+(defn compile-handler
   [handler]
   (fn [request]
     (handler request)))
 
-(defn ^:private create-handler
+(defn create-handler
   [bindings body]
   `(compile-handler (fn [request#]
                       (let-request [~bindings request#] ~@body))))

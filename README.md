@@ -67,6 +67,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ;; A handler is some function that accepts a Ring request.
 ;; Gate tries to turn whatever it returns into a Ring response.
+
 (defn hello-handler
   [req]
   "Hello, World!")
@@ -74,12 +75,14 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 ;; Since it's no fun to manually pull params out of requests,
 ;; Gate also provides a convinence macro, defhandler, to make
 ;; it easy to access parameters.
+
 (defhandler greeter
   [name]
   (str "Hello, " name "!"))
 
 ;; Middleware is standard Ring middleware, it accepts
 ;; a handler and returns a function that accepts a request.
+
 (defn enthusiator
   [handler]
   (fn [req]
@@ -88,6 +91,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 	  (str resp "!!"))))
 
 ;; Routes are just a sequence of route-maps.
+
 (def quickstart-routes
   [{:name :hello-world
     :path "/"
@@ -100,6 +104,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ;; A router takes a sequence of routes and an optional map
 ;; of router settings.
+
 (defrouter router
   quickstart-routes
   {:on-404 (fn [_] "There's nothing here....")

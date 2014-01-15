@@ -1,7 +1,7 @@
 (ns gate.response
   (:require [ring.util.response :refer [response content-type]])
   (:import [java.io File InputStream]
-           [clojure.lang IFn ISeq IPersistentMap]))
+           [clojure.lang IFn ISeq APersistentMap]))
 
 ;; Taken mostly from Compojure (compojure.response)
 
@@ -15,7 +15,7 @@
   String
   (render [body _] (-> (response body)
                        (content-type "text/html; charset=utf-8")))
-  IPersistentMap
+  APersistentMap
   (render [resp-map _] (merge (with-meta (response "") (meta resp-map))
                               resp-map))
   IFn
