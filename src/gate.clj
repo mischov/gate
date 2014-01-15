@@ -1,7 +1,6 @@
 (ns gate
   (:require [gate.routes :as routes]
-            [gate.router :as router]
-            [gate.response :as response]))
+            [gate.router :as router]))
 
 (def expand-routes routes/expand-routes)
 (def create-router router/create-router)
