@@ -1,6 +1,7 @@
 (ns gate.routes
   (:require [gate.route.path :as path]
             [gate.route.matcher :as matcher]
+            [gate.route.url :as url]
             [gate.route.handlers :as handlers]))
 
 (def default-dna
@@ -51,6 +52,7 @@
        (-> route
            (path/expand-path route-dna)
            (matcher/add-matcher)
+           (url/add-url-fn)
            (handlers/expand-handlers)
            (concat expanded-children)))))
 
