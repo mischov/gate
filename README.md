@@ -123,10 +123,10 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 Documentation is a work in progress, but what exists can be found in the [Wiki](https://github.com/mischov/gate/wiki):
 
-    - [Routes](https://github.com/mischov/gate/wiki/Routes)
-    - [Handlers](https://github.com/mischov/gate/wiki/Handlers)
-    - [Middleware](https://github.com/mischov/gate/wiki/Middleware)
-    - [Resources](https://github.com/mischov/gate/wiki/Resources)
+- [Routes](https://github.com/mischov/gate/wiki/Routes)
+- [Handlers](https://github.com/mischov/gate/wiki/Handlers)
+- [Middleware](https://github.com/mischov/gate/wiki/Middleware)
+- [Resources](https://github.com/mischov/gate/wiki/Resources)
 
 [**Back To Top ⇧**](#contents)
 
