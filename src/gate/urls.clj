@@ -21,7 +21,7 @@
       (when-let [url-fn (get url-fns route-name)]
         (url-fn params)))))
 
-(defn add-url-for
+(defn add-url-builder
   "Adds an app's url-builder to a ring request as :url-builder."
   [request routes]
   (assoc request :url-builder (create-url-builder routes)))

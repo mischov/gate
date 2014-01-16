@@ -1,6 +1,7 @@
 (ns gate.router
   (:require [gate.response :as response]
-            [gate.urls :as urls]
+            [gate.urls :refer [add-url-builder]]
+            [gate.response.not-found :refer [add-not-found]]
             [ring.util.response :refer [resource-response]]
             [ring.middleware.content-type :refer [content-type-response]]))
 
@@ -53,13 +54,13 @@
   "Accepts a sequence of expanded routes and an optional map of
    options and returns a router."
   ([routes] (create-router routes {}))
-  ([routes {:keys [on-404 resources]
-            :or {on-404 "404: Not Found"}
-            :as settings}]
+  ([routes {:keys [resources] :as settings}]
      (fn [request]
-       (let [request (urls/add-url-for request routes)
+       (let [request (-> request
+                         (add-url-builder routes)
+                         (add-not-found settings))
              request-method (get request :request-method)
              routes (filter (shares-method? request-method) routes)]
          (or (when resources (resource-matcher request resources))
              (some #(find-matching request %) routes)
-             (issue-404 on-404 request))))))
+             (:not-found request))))))
