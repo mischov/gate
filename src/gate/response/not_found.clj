@@ -9,5 +9,5 @@
 
 (defn add-not-found
   [request settings]
-  (let [on-404 (get settings :on-404 "404: Not Found")]
-    (assoc request :not-found (issue-404 on-404 request))))
+  (let [handler (get settings :404-handler "404: Not Found")]
+    (assoc request :not-found (issue-404 handler request))))

@@ -10,7 +10,7 @@ Gate is a web routing library for Ring and Clojure.
   [{:name :hello
     :path "/"
     :get  (fn [_] "<h1>Hello, World!</h1>")}]
-  {:on-404 (fn [_] "<h1>404</h1><p>Not Found</p>")}) 
+  {:404-handler (fn [_] "<h1>404</h1><p>Not Found</p>")}) 
 ```
 
 ## Contents
@@ -46,7 +46,7 @@ Add the following dependency to your `project.clj` file:
 
 3. Granular application of middleware is really useful.
   
-   Gate not only plays very nicely with existing ring middleware, it attempts to improve the experience by allowing users to easily apply a middleware to a single route or even a single method of a route, in addition to being able to apply middleware to a whole app or group of routes. Gate also makes it easy to combine middleware that needs to be used together into a single middleware.
+   Gate not only plays nicely with existing ring middleware, but attempts to improve the experience by allowing users to easily apply a middleware to a single route or even a single method of a route (in addition to being able to add middleware to an whole app or route hierarchy).
 
 [**Back To Top ⇧**](#contents)
 
@@ -107,7 +107,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 (defrouter router
   quickstart-routes
-  {:on-404 (fn [_] "There's nothing here....")
+  {:404-handler (fn [_] "There's nothing here....")
    :resources {:path "/" :root "public"}})
 
 ;; Run routers like you would run any ring handler.
@@ -121,9 +121,8 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ## Documentation
 
-Documentation is a work in progress, but what exists can be found in the Wiki.
+Documentation is a work in progress, but what exists can be found in the [Wiki](https://github.com/mischov/gate/wiki):
 
-- [Wiki](https://github.com/mischov/gate/wiki).
     - [Routes](https://github.com/mischov/gate/wiki/Routes)
     - [Handlers](https://github.com/mischov/gate/wiki/Handlers)
     - [Middleware](https://github.com/mischov/gate/wiki/Middleware)
