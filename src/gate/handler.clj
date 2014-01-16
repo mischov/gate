@@ -7,7 +7,7 @@
 ;; Much of the rest of this namespace taken or adapted
 ;; from Compojure (compojure.core)
 
-(defn ^:private read-param-as
+(defn read-param-as
   "When there's a param and you know how to read it,
    read it. If you can't read it, give it back."
   [param-type param]
@@ -16,27 +16,27 @@
       (read param)
       param)))
 
-(defn ^:private get-param
+(defn  get-param
   "Get a param matching sym (as a keyword or string)
    from the :params map on a Ring request."
   [req sym]
   `(get-in ~req [:params ~(keyword sym)]
                 (get-in ~req [:params ~(str sym)])))
 
-(defn ^:private assoc-symbol-as
+(defn  assoc-symbol-as
   "Attempts to convert the parameter matching sym
    into the indicated type, and associate the result
    with sym in the bindings."
   [bindings req [sym ptype]]
     (assoc bindings sym `(read-param-as ~ptype ~(get-param req sym))))
 
-(defn ^:private assoc-symbol
+(defn  assoc-symbol
   "Associates the parameter matching sym with sym
    in the bindings."
   [bindings req sym]
   (assoc bindings sym (get-param req sym)))
 
-(defn ^:private vector-bindings
+(defn vector-bindings
   "Take a vector representing a number of symbols and
    create a map representing the binding of each symbol
    to the associated param from the request.

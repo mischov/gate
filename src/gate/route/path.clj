@@ -35,11 +35,7 @@
 
 (defn ^:private make-path-regex
   [route]
-  (let [{:keys [path-parts path-constraints]} route
-        path-parts (if (and (> (count path-parts) 1)
-                            (empty? (first path-parts)))
-                     (rest path-parts)
-                     path-parts)]
+  (let [{:keys [path-parts path-constraints]} route]
     (re-pattern
      (apply str
        (interleave (repeat "/")

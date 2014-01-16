@@ -24,7 +24,7 @@
    to represent all integers smaller than bigints, so it
    seemed like a good idea to follow suit."
   [^String s]
-  (when (re-find #"^\d+$")
+  (when (re-find #"^\d+$" s)
     (Long/parseLong s)))
 
 (defn read-decimal
