@@ -18,13 +18,13 @@
       (uniquely-add m result)
       (recur (first ms) (next ms) (uniquely-add m result)))))
 
-(defn wrap-handler
-  [handler middlewares]
+(defn wrap-responder
+  [responder middlewares]
   (let [middlewares (dedup-middlewares middlewares)
         wrapper (apply comp middlewares)]
     (if wrapper
-      (wrapper handler)
-      handler)))
+      (wrapper responder)
+      responder)))
 
 (defn combine
   "Combines middlewares. Middleware will be called left to right."

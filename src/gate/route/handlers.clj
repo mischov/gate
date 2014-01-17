@@ -1,14 +1,21 @@
 (ns gate.route.handlers
-  (:require [gate.middleware :as middleware]))
+  (:require [gate.middleware :as middleware]
+            [gate.response :as response]))
 
 (def request-methods #{:get :post :head :put :delete
                        :trace :connect :options :any})
 
+(defn create-responder
+  [handler]
+  (fn [req]
+    (response/render (handler req) req)))
+
 (defn create-action
   [handler middlewares]
-  (let [wrapped-handler (middleware/wrap-handler handler middlewares)]
-    (fn [req]
-      (wrapped-handler req))))
+    (let [responder (create-responder handler)
+          wrapped-responder (middleware/wrap-responder responder middlewares)]
+      (fn [req]
+        (wrapped-responder req))))
 
 (defprotocol Handler
   (read-handler [handler middleware]))
