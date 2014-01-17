@@ -87,8 +87,9 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
   [handler]
   (fn [req]
     (let [r (update-in req [:params :name] clojure.string/upper-case)
-          resp (handler r)]
-	  (str resp "!!"))))
+          resp (handler r)
+	  body (get resp :body)]
+	  (assoc resp :body (str body "!!"))))
 
 ;; Routes are just a sequence of route-maps.
 
