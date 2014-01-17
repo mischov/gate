@@ -43,13 +43,6 @@
     (let [r (merge-with merge request (expand-path-params path-params))]
       (response/render (action r) r))))
 
-(defn issue-404
-  [handler request]
-   (let [handler (if (fn? handler) (handler request) handler)]
-     {:status 404
-      :headers {"content-type" "text/html; charset=utf-8"}
-      :body handler}))
-
 (defn create-router
   "Accepts a sequence of expanded routes and an optional map of
    options and returns a router."
