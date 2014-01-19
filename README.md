@@ -60,33 +60,33 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 ## Quick Start
 
-Import `defrouter` and `defhandler` from gate and gate.handler.
-
 ```clojure
 (ns yourproj.quickstart
   (:require [gate :refer [defrouter]]
             [gate.handler :refer [defhandler]]))
-```
 
-A Gate handler is some function that accepts a Ring request. Gate attempts to convert whatever a handler returns into a Ring response.
+;; A Gate handler is some function that accepts a Ring request.
+;; Gate attempts to concert whatever a handler returns into a
+;; Ring response.
 
-```clojure
 (defn hello-handler
-  [request]
+  [req]
   "Hello, World!")
-```
 
-Since it's no fun to manually pull params out of the request in every handler, Gate also provides a convinence macro, `defhandler`, to make accessing params easier. In the following example, `defhandler` pulls the key `:name` out of the :params map of the Ring request and binds it to the symbol `name`.
+;; Since it's no fun to manually pull params out of the request 
+;; in every handler, Gate also provides a convinence macro,
+;; defhandler, to make accessing params easier.
+;;
+;; In the following example, the key :name is retrieved from
+;; the :params map of the request and bound to the symbol 'name'.
 
-```clojure
 (defhandler greeter
   [name]
   (str "Hello, " name "!"))
-```
 
-Gate middleware is just standard Ring middleware, so it accepts a handler and returns some function which accepts a request.
+;; Gate middleware is just standard Ring middleware, so it accepts
+;; a handler and returns some function accepting a request.
 
-```clojure
 (defn enthusiator
   [handler]
   (fn [req]
@@ -94,11 +94,11 @@ Gate middleware is just standard Ring middleware, so it accepts a handler and re
           resp (handler r)
 	  body (get resp :body)]
 	  (assoc resp :body (str body "!!"))))
-```
 
-A Gate route is a map containing the keys :name and :path, optionally one or more keys representing HTTP methods paired with a handler, and optionally the keys :middleware and :children.
+;; A gate route is a map containing the keys :name and :path, maybe
+;; the keys :middleware and :children, and maybe one or more keys
+;; representing an HTTP method paired with a handler.
 
-```clojure
 (def quickstart-routes
   [{:name :hello-world
     :path "/"
@@ -108,21 +108,24 @@ A Gate route is a map containing the keys :name and :path, optionally one or mor
     :path "/:name"
     :middleware [enthusiator]
     :get  greeter}])
-```
 
-The heart of a gate application is the router. A router takes a sequence of Gate routes and an optional map of router settings and returns a function that attempts to match a Ring request to a handler.
+;; The heart of a Gate app is the router, which takes a sequence
+;; of routes and an optional map of router settings and returns a
+;; function that attempts to match a Ring request to a handler.
 
-```clojure
 (defrouter router
   quickstart-routes
   {:404-handler (fn [_] "There's nothing here....")
    :resources {:path "/" :root "public"}})
+
+;; Run routers like you would run any ring handler.
+;;
+;; For instance, if you wanted to run this with lein-ring you'd
+;; set the following keys in your defproject:
+;;
+;;   :plugins [[lein-ring "0.8.10"]]
+;;   :ring {:handler yourproj.quickstart/router}
 ```
-
-Routers are used like any other Ring handler.
-
-For example, to run the previous example with lein-ring you would set `:plugins` key of your project.clj to `[[lein-ring "0.8.10"]]` and the `:ring` key to `{:handler yourproj.quickstart/router}.`
-
 [**Back To Top ⇧**](#contents)
 
 ## Documentation
