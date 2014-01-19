@@ -1,43 +1,6 @@
 (ns gate.middleware
-  (:require [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.nested-params :refer [wrap-nested-params]]
-            [ring.middleware.keyword-params :refer [wrap-keyword-params]]))
+  (:require [gate.middleware.session :as gs]
+            [gate.middleware.app :as ga]))
 
-(defn ^:private uniquely-add
-  [middleware middlewares]
-  (if (some #{middleware} middlewares)
-    middlewares
-    (conj middlewares middleware)))
-
-(defn ^:private dedup-middlewares
-  [middlewares]
-  (loop [m (first middlewares)
-         ms (next middlewares)
-         result []]
-    (if-not ms
-      (uniquely-add m result)
-      (recur (first ms) (next ms) (uniquely-add m result)))))
-
-(defn wrap-responder
-  [responder middlewares]
-  (let [middlewares (dedup-middlewares middlewares)
-        wrapper (apply comp middlewares)]
-    (if wrapper
-      (wrapper responder)
-      responder)))
-
-(defn combine
-  "Combines middlewares. Middleware will be called left to right."
-  [& middlewares]
-  (apply comp middlewares))
-
-(defmacro defcomp
-  "Defines a composite middleware made from one or more other
-   middlewares."
-  [name & middlewares]
-  `(def ~name (combine ~@middlewares)))
-
-(defcomp api
-  wrap-params
-  wrap-nested-params
-  wrap-keyword-params)
+(def add-ring-session gs/add-ring-session)
+(def api ga/api)

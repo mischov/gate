@@ -14,8 +14,8 @@
 (defmacro defroutes
   "Expands a sequence of routes at compile times."
   [name routes & [settings]]
-  (let [dna (prepare-dna routes/default-dna settings)]
-    `(def ~name (expand-routes ~routes ~dna))))
+  `(let [dna# (prepare-dna ~routes/default-dna ~settings)]
+     (def ~name (expand-routes ~routes dna#))))
 
 (defmacro defrouter
   "Expands a sequence of user-defined routes and creates
@@ -27,6 +27,6 @@
    use it with defroutes which will also expand routes at compile
    time."
   [name routes & [settings]]
-  (let [dna (prepare-dna routes/default-dna settings)]
-    `(def ~name
-       (create-router (expand-routes ~routes ~dna) ~settings))))
+  `(let [dna# (prepare-dna ~routes/default-dna ~settings)]
+     (def ~name
+       (create-router (expand-routes ~routes dna#) ~settings))))

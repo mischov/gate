@@ -1,21 +1,26 @@
 (ns gate.route.handlers
-  (:require [gate.middleware :as middleware]
+  (:require [gate.route.middleware :as middleware]
             [gate.response :as response]))
 
 (def request-methods #{:get :post :head :put :delete
                        :trace :connect :options :any})
 
-(defn create-responder
+(defn ^:private handler->action
+  "An action differs from a handler in that, while a
+   handler can return anything, an action should return
+   a Ring response."
   [handler]
-  (fn [req]
-    (response/render (handler req) req)))
+  (fn [request]
+    (response/render (handler request) request)))
 
-(defn create-action
+(defn ^:private create-action
+  "Creates an action from a handler and wraps that in
+   middleware."
   [handler middlewares]
-    (let [responder (create-responder handler)
-          wrapped-responder (middleware/wrap-responder responder middlewares)]
-      (fn [req]
-        (wrapped-responder req))))
+    (let [action (handler->action handler)
+          wrapped-action (middleware/wrap-action action middlewares)]
+      (fn [request]
+        (wrapped-action request))))
 
 (defprotocol Handler
   (read-handler [handler middleware]))
@@ -35,6 +40,7 @@
          :action (create-action h (concat middlewares m))})))
 
 (defn expand-handlers
+  "Creates an expanded route method in route."
   [route]
   (when-let [handlers (filter #(request-methods (first %))  route)]
     (let [r (into {} (filter #(not (request-methods (first %))) route))

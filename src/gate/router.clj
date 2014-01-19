@@ -41,7 +41,7 @@
   [request {:keys [matcher action] :as route}]
   (when-let [path-params (matcher request)]
     (let [r (merge-with merge request (expand-path-params path-params))]
-      (response/render (action r) r))))
+      (action r))))
 
 (defn create-router
   "Accepts a sequence of expanded routes and an optional map of

@@ -66,7 +66,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
             [gate.handler :refer [defhandler]]))
 
 ;; A Gate handler is some function that accepts a Ring request.
-;; Gate attempts to concert whatever a handler returns into a
+;; Gate attempts to convert whatever a handler returns into a
 ;; Ring response.
 
 (defn hello-handler
@@ -92,8 +92,8 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
   (fn [req]
     (let [r (update-in req [:params :name] clojure.string/upper-case)
           resp (handler r)
-	  body (get resp :body)]
-	  (assoc resp :body (str body "!!"))))
+          body (get resp :body)]
+      (assoc resp :body (str body "!!"))))
 
 ;; A gate route is a map containing the keys :name and :path, maybe
 ;; the keys :middleware and :children, and maybe one or more keys
@@ -115,7 +115,7 @@ That said, feel free to experiment with Gate and report bugs or make suggestions
 
 (defrouter router
   quickstart-routes
-  {:404-handler (fn [_] "There's nothing here....")
+  {:404-handler (fn [_] "There is nothing here....")
    :resources {:path "/" :root "public"}})
 
 ;; Run routers like you would run any ring handler.
