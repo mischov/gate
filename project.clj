@@ -1,4 +1,4 @@
-(defproject gate "0.0.8"
+(defproject gate "0.0.9"
   :description "Gate is a routing library for Clojure's Ring."
   :url "https://github.com/mischov/gate"
   :license {:name "Eclipse Public License"
