@@ -28,7 +28,7 @@ Gate is a web routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.9"]
+[gate "0.0.10"]
 ```
 [**Back To Top ⇧**](#contents)
 
@@ -36,7 +36,7 @@ Add the following dependency to your `project.clj` file:
 
 1. Clojure data structures make better routes than Clojure macros.
 
-   Using data structures for routes not only makes it easier to generate, nest, combine, and otherwise manipulate routes (you've got a whole language of tools at your disposal), but also makes it easier to apply middleware granularly (and will make it easier to implement reverse routing in the future).
+   Using data structures for routes not only makes it easier to generate, nest, combine, and otherwise manipulate routes (you've got a whole language of tools at your disposal), but also makes it easier to apply middleware granularly and implement reverse routing.
 
 2. Maps are clearer representations of routes than vectors.
    
