@@ -1,8 +1,8 @@
 (ns gate.routes
-  (:require [gate.route.path :as path]
-            [gate.route.matcher :as matcher]
-            [gate.route.url :as url]
-            [gate.route.handlers :as handlers]))
+  (:require [gate.routes.path :refer [parse-path expand-path]]
+            [gate.routes.matcher :refer [add-matcher]]
+            [gate.routes.url :refer [add-url-fn]]
+            [gate.routes.handler :refer [expand-handlers]]))
 
 (def default-dna
   "DNA is information a route passes to child routes."
@@ -16,7 +16,7 @@
   "Combines path with parent-dna to create base dna for route."
   [parent-dna route]
   (let [p (get route :path)]
-    (-> (path/parse-path p parent-dna)
+    (-> (parse-path p parent-dna)
         (update-in [:path] str p))))
 
 (defn ^:private update-dna-middleware
@@ -34,8 +34,8 @@
       (update-dna-path route)
       (update-dna-middleware route)))
 
-(declare expand-routes)
 ;; expand-children defined in terms of expand-routes.
+(declare expand-routes)
 
 (defn ^:private expand-children
   "Expands a sequence of child routes."
@@ -50,10 +50,10 @@
      (let [route-dna (create-route-dna route parent-dna)
            expanded-children (expand-children route route-dna)]
        (-> route
-           (path/expand-path route-dna)
-           (matcher/add-matcher)
-           (url/add-url-fn)
-           (handlers/expand-handlers)
+           (expand-path route-dna)
+           (add-matcher)
+           (add-url-fn)
+           (expand-handlers)
            (concat expanded-children)))))
 
 (defn expand-routes

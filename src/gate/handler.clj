@@ -1,7 +1,6 @@
 (ns gate.handler
   (:refer-clojure :exclude [read])
   (:require [gate.handler.param :as param]
-            [gate.urls :as urls]
             [ring.util.response :as ring]))
 
 ;; Much of the rest of this namespace taken or adapted
@@ -88,6 +87,16 @@
   `(def ~name
      ~(create-handler req-bindings body)))
 
+;; Reverse Routing
+
+(defn url-for
+  "Uses url-builder to create a url from a route name
+   and an optional map of params."
+  ([request route-name] (url-for request route-name nil))
+  ([request route-name params]
+     (when-let [url-builder (get request :url-builder)]
+       (url-builder route-name params))))
+
 ;; Handler Redirection
 
 (defn redirect
@@ -109,8 +118,9 @@
    needed to construct the url)."
   ([url]
      (ring/redirect url))
-  ([request route-name & [params]]
-     (let [url (urls/build-url request route-name params)]
+  ([request route-name] (redirect request route-name nil))
+  ([request route-name params]
+     (let [url (url-for request route-name params)]
        (ring/redirect url))))
 
 (defn then-redirect
@@ -127,8 +137,9 @@
    needed to construct the url)."
   ([url]
      (ring/redirect-after-post url))
-  ([request route-name & [params]]
-     (let [url (urls/build-url request route-name params)]
+  ([request route-name] (then-redirect request route-name nil))
+  ([request route-name params]
+     (let [url (url-for request route-name params)]
        (ring/redirect-after-post url))))
 
 

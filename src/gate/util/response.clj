@@ -1,4 +1,4 @@
-(ns gate.response
+(ns gate.util.response
   (:require [ring.util.response :refer [response content-type]])
   (:import [java.io File InputStream]
            [clojure.lang IFn ISeq APersistentMap]))

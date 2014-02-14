@@ -1,59 +1,40 @@
 (ns gate.router
-  (:require [gate.response :as response]
-            [gate.urls :refer [add-url-builder]]
-            [gate.response.not-found :refer [add-not-found]]
-            [ring.util.response :refer [resource-response]]
-            [ring.middleware.content-type :refer [content-type-response]]))
+  (:require [gate.util.response.not-found :refer [add-not-found]]
+            [gate.router.urls :refer [add-url-builder]]
+            [gate.router.resources :refer [get-resource-matching]]))
 
-(defn ^:private shares-method?
-  [request-method]
-  (fn [route]
-    (let [route-method (get route :method)]
-      (or (= route-method :any)
-          (= request-method route-method)
-          false))))
+(defn ^:private has-method?
+  "Returns true if route's method matches request method,
+   or if route's method is :any."
+  [request-method route]
+  (let [route-method (get route :method)]
+    (or (= route-method :any)
+        (= request-method route-method)
+        false)))
 
-(defn ^:private expand-path-params
-  [path-params]
-  {:params path-params :path-params path-params})
-
-(defn ^:private set-content-type
-  [response request]
-  (let [resp (content-type-response response request)]
-    (when (get resp :status)
-      resp)))
-
-(defn ^:private resource-matcher
-  [request resource-settings]
-  (let [uri (get request :uri)]
-    (when (re-find #"\.[A-Za-z]+" uri)
-        (let [default-settings {:path "/" :root "public"}
-              {:keys [path root]} (merge default-settings
-                                         resource-settings)
-              full-path (str root "/" (clojure.string/replace-first uri
-                                                                    path
-                                                                    ""))]
-          (-> (resource-response full-path)
-              (set-content-type request)
-              )))))
-
-(defn ^:private find-matching
+(defn ^:private route-matches
   [request {:keys [matcher action] :as route}]
   (when-let [path-params (matcher request)]
-    (let [r (merge-with merge request (expand-path-params path-params))]
+    (let [r (merge-with merge request path-params)]
       (action r))))
+
+(defn ^:private get-route-matching
+  "Returns first route matching the request, or nil
+   if no route matches."
+  [request routes]
+  (let [request-method (get request :request-method)
+        routes (filter #(has-method? request-method %) routes)]
+    (some #(route-matches request %) routes)))
 
 (defn create-router
   "Accepts a sequence of expanded routes and an optional map of
    options and returns a router."
   ([routes] (create-router routes {}))
-  ([routes {:keys [resources] :as settings}]
+  ([routes settings]
      (fn [request]
        (let [request (-> request
                          (add-url-builder routes)
-                         (add-not-found settings))
-             request-method (get request :request-method)
-             routes (filter (shares-method? request-method) routes)]
-         (or (when resources (resource-matcher request resources))
-             (some #(find-matching request %) routes)
+                         (add-not-found settings))]
+         (or (get-resource-matching request settings)
+             (get-route-matching request routes)
              (:not-found request))))))

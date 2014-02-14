@@ -1,4 +1,4 @@
-(ns gate.route.url
+(ns gate.routes.url
   (:require [clojure.string :as string])
   (:import [java.net URLEncoder]))
 

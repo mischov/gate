@@ -1,4 +1,4 @@
-(ns gate.route.path
+(ns gate.routes.path
   (:require [clojure.string :as string])
   (:import [java.util.regex Pattern]))
 

@@ -1,4 +1,4 @@
-(ns gate.route.matcher)
+(ns gate.routes.matcher)
 
 (defn ^:private path-matcher
   [route]
@@ -12,7 +12,9 @@
   [route]
   (let [path-match (path-matcher route)]
     (fn [request]
-      (path-match request))))
+      (let [path-params (path-match request)]
+        {:params path-params
+         :path-params path-params}))))
 
 (defn add-matcher
   [route]

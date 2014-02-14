@@ -1,4 +1,4 @@
-(ns gate.urls)
+(ns gate.router.urls)
 
 (defn ^:private get-url-fns
   "Takes a seq of expanded routes and returns a map of each
@@ -25,10 +25,3 @@
   "Adds an app's url-builder to a ring request as :url-builder."
   [request routes]
   (assoc request :url-builder (create-url-builder routes)))
-
-(defn build-url
-  "Uses url-builder to create a url from a route name
-   and an optional map of params."
-  [request route-name & [params]]
-  (when-let [url-builder (get request :url-builder)]
-    (url-builder route-name params)))

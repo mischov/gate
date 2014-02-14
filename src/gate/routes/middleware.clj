@@ -1,4 +1,4 @@
-(ns gate.route.middleware
+(ns gate.routes.middleware
   (:import [clojure.lang Fn Sequential]))
 
 (defprotocol Middleware

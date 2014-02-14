@@ -1,4 +1,4 @@
-(ns gate.response.not-found)
+(ns gate.util.response.not-found)
 
 (defn issue-404
   [handler request]
