@@ -14,10 +14,10 @@
         false)))
 
 (defn ^:private route-matches
-  [request {:keys [matcher action] :as route}]
+  [request {:keys [matcher handler] :as route}]
   (when-let [path-params (matcher request)]
-    (let [r (merge-with merge request path-params)]
-      (action r))))
+    (let [req (merge-with merge request path-params)]
+      (handler req))))
 
 (defn ^:private get-route-matching
   "Returns first route matching the request, or nil

@@ -5,22 +5,14 @@
 (def request-methods #{:get :post :head :put :delete
                        :trace :connect :options :any})
 
-(defn ^:private handler->action
-  "An action differs from a handler in that, while a
-   handler can return anything, an action should return
-   a Ring response."
-  [handler]
-  (fn [request]
-    (response/render (handler request) request)))
-
-(defn ^:private create-action
-  "Creates an action from a handler and wraps that in
-   middleware."
+(defn ^:private wrap-handler
+  "Wraps handler with middleware after ensuring that it
+   returns a Ring response."
   [handler middlewares]
-    (let [action (handler->action handler)
-          wrapped-action (middleware/wrap-action action middlewares)]
+    (let [handler (fn [request] (response/render (handler request) request))
+          wrapped-handler (middleware/wrap-handler handler middlewares)]
       (fn [request]
-        (wrapped-action request))))
+        (wrapped-handler request))))
 
 (defprotocol Handler
   (read-handler [handler middleware]))
@@ -29,15 +21,15 @@
   clojure.lang.IFn
   (read-handler
     [handler middlewares]
-    {:handler handler
-     :action (create-action handler middlewares)})
+    {:handler-fn handler
+     :handler (wrap-handler handler middlewares)})
   clojure.lang.IPersistentMap
   (read-handler
     [handler middlewares]
     (let [h (get handler :handler)
           m (get handler :middleware)]
-        {:handler h
-         :action (create-action h (concat middlewares m))})))
+        {:handler-fn h
+         :handler (wrap-handler h (concat middlewares m))})))
 
 (defn expand-handlers
   "Creates an expanded route method in route."

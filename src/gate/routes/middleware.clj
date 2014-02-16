@@ -21,10 +21,10 @@
       middlewares
       (conj middlewares m))))
 
-(defn wrap-action
-  [action middlewares]
+(defn wrap-handler
+  [handler middlewares]
   (let [middlewares (combine middlewares [])
-        wrapper (apply comp middlewares)]
-    (if wrapper
-      (wrapper action)
-      action)))
+        wrap (apply comp middlewares)]
+    (if wrap
+      (wrap handler)
+      handler)))
