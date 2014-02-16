@@ -1,7 +1,8 @@
 (ns gate.router
   (:require [gate.util.response.not-found :refer [add-not-found]]
             [gate.router.urls :refer [add-url-builder]]
-            [gate.router.resources :refer [get-resource-matching]]))
+            [gate.router.resources :refer [get-resource-matching]]
+            [gate.routes :as routes]))
 
 (defn ^:private has-method?
   "Returns true if route's method matches request method,

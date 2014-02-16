@@ -3,8 +3,8 @@
   (:require [gate.handler.param :as param]
             [ring.util.response :as ring]))
 
-;; Much of the rest of this namespace taken or adapted
-;; from Compojure (compojure.core)
+;; Much of this namespace taken from or inspired
+;; by Compojure (compojure.core)
 
 (defn read-param-as
   "When there's a param and you know how to read it,

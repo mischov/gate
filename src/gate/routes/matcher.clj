@@ -12,7 +12,7 @@
   [route]
   (let [path-match (path-matcher route)]
     (fn [request]
-      (let [path-params (path-match request)]
+      (when-let [path-params (path-match request)]
         {:params path-params
          :path-params path-params}))))
 
