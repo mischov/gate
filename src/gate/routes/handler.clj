@@ -1,5 +1,5 @@
 (ns gate.routes.handler
-  (:require [gate.routes.middleware :as middleware]
+  (:require [gate.middleware :as middleware]
             [gate.util.response :as response]))
 
 (def request-methods #{:get :post :head :put :delete
