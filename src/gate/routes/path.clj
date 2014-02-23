@@ -23,13 +23,14 @@
     (update-in result [:path-parts] conj string)))
 
 (defn parse-path
-  "Parses path to update route's DNA with current route's `:path-parts`,
-   `:path-params`, `:path-constraints`."
+  "Parses path to update route's DNA with current route's
+  `:path-parts`, `:path-params`, `:path-constraints`, and
+  `:path`."
   ([pattern parent-dna]
      (if-let [m (re-matches #"/(.*)" pattern)]
        (let [[_ path] m]
          (reduce parse-path-token
-                 parent-dna
+                 (update-in parent-dna [:path] str "/" path)
                  (string/split path #"/")))
        (throw (ex-info "Invalid route pattern" {:pattern pattern})))))
 

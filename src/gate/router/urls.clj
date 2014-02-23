@@ -12,7 +12,7 @@
       (let [{:keys [name url-fn]} route]
         (recur (next routes) (first routes) (assoc result name url-fn))))))
 
-(defn ^:private create-url-builder
+(defn create-url-builder
   "Creates a function that attempts to build a url from a
    route name and a map of params."
   [routes]
@@ -23,5 +23,5 @@
 
 (defn add-url-builder
   "Adds an app's url-builder to a ring request as :url-builder."
-  [request routes]
-  (assoc request :url-builder (create-url-builder routes)))
+  [request url-builder]
+  (assoc request :url-builder url-builder))

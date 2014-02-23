@@ -16,8 +16,7 @@
   "Combines path with parent-dna to create base dna for route."
   [parent-dna route]
   (let [p (get route :path)]
-    (-> (parse-path p parent-dna)
-        (update-in [:path] str p))))
+    (parse-path p parent-dna)))
 
 (defn ^:private update-dna-middleware
   "Combines route and parent middleware then add the result to
