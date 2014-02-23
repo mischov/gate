@@ -28,7 +28,7 @@ Gate is a web routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.10"]
+[gate "0.0.11"]
 ```
 [**Back To Top ⇧**](#contents)
 
