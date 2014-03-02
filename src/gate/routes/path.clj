@@ -12,14 +12,12 @@
                      (let [key (keyword token)]
                        (-> result
                            (update-in [:path-parts] conj key)
-                           (update-in [:path-params] conj key)
-                           (assoc-in [:path-constraints key] "([^/]+)"))))
+                           (update-in [:path-params] conj key))))
     #"^\*(.+)$" :>> (fn [[_ token]]
                       (let [key (keyword token)]
                         (-> result
                             (update-in [:path-parts] conj key)
-                            (update-in [:path-params] conj key)
-                            (assoc-in [:path-constraints key] "(.*)"))))
+                            (update-in [:path-params] conj key))))
     (update-in result [:path-parts] conj string)))
 
 (defn parse-path
@@ -33,21 +31,3 @@
                  (update-in parent-dna [:path] str "/" path)
                  (string/split path #"/")))
        (throw (ex-info "Invalid route pattern" {:pattern pattern})))))
-
-(defn ^:private make-path-regex
-  [route]
-  (let [{:keys [path-parts path-constraints]} route]
-    (re-pattern
-     (apply str
-       (interleave (repeat "/")
-                   (map #(or (get path-constraints %) (Pattern/quote %))
-                        path-parts))))))
-
-(defn add-path-regex
-  [route]
-  (assoc route :path-re (make-path-regex route)))
-
-(defn expand-path
-  [route route-dna]
-  (let [r (merge route route-dna)]
-    (add-path-regex r)))

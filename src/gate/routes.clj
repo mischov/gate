@@ -1,6 +1,5 @@
 (ns gate.routes
-  (:require [gate.routes.path :refer [parse-path expand-path]]
-            [gate.routes.matcher :refer [add-matcher]]
+  (:require [gate.routes.path :refer [parse-path]]
             [gate.routes.url :refer [add-url-fn]]
             [gate.routes.handler :refer [expand-handlers]]))
 
@@ -9,7 +8,6 @@
   {:path nil
    :path-parts []
    :path-params []
-   :path-constraints {}
    :middleware []})
 
 (defn ^:private update-dna-path
@@ -48,8 +46,10 @@
   (let [name (get route :name)
         path (get route :path)]
     (cond
-     (nil? name) (throw (ex-info (str "Routes require a :name key, but this key is missing from: " route) {}))
-     (nil? path) (throw (ex-info (str "Routes require a :path key, but this key is missing from: " route) {}))
+     (nil? name)
+       (throw (ex-info (str "Routes require a :name key, but this key is missing from: " route) {}))
+     (nil? path)
+       (throw (ex-info (str "Routes require a :path key, but this key is missing from: " route) {}))
      :else true)))
 
 (defn expand-route
@@ -60,8 +60,7 @@
          (let [route-dna (create-route-dna route parent-dna)
                expanded-children (expand-children route route-dna)]
            (-> route
-               (expand-path route-dna)
-               (add-matcher)
+               (merge route-dna)
                (add-url-fn)
                (expand-handlers)
                (concat expanded-children))))))
