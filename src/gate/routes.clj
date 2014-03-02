@@ -64,7 +64,7 @@
                (add-matcher)
                (add-url-fn)
                (expand-handlers)
-             (concat expanded-children))))))
+               (concat expanded-children))))))
 
 (defn expand-routes
   "Mapcats expand-route over a sequence of concise routes to
