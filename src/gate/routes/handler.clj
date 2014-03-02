@@ -21,14 +21,14 @@
   clojure.lang.IFn
   (read-handler
     [handler middlewares]
-    {:handler-fn handler
+    {:handler-fn (.getName (class handler))
      :handler (wrap-handler handler middlewares)})
   clojure.lang.IPersistentMap
   (read-handler
     [handler middlewares]
     (let [h (get handler :handler)
           m (get handler :middleware)]
-        {:handler-fn h
+        {:handler-fn (.getName (class h))
          :handler (wrap-handler h (concat middlewares m))})))
 
 (defn expand-handlers
