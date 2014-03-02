@@ -7,4 +7,6 @@
                  [expectations "1.4.52"]
                  [ring/ring-core "1.2.1"]
                  [org.clojure/tools.reader "0.8.3"]]
-  :plugins [[lein-expectations "0.0.7"]])
+  :plugins [[lein-expectations "0.0.7"]]
+  :profiles {:dev {:dependencies [[compojure "1.1.6"]
+                                  [criterium "0.4.3"]]}})
