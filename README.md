@@ -34,19 +34,14 @@ Add the following dependency to your `project.clj` file:
 
 ## Rationale
 
-1. Clojure data structures make better routes than Clojure macros.
+Clojure already has a number of strong libraries for url routing, so why should you consider using Gate?
 
-   Using data structures for routes not only makes it easier to generate, nest, combine, and otherwise manipulate routes (you've got a whole language of tools at your disposal), but also makes it easier to apply middleware granularly and implement reverse routing.
+1. Data makes better routes than macros.
+1. Code needs to be clear and maintainable.
+1. Granular application of middleware is awesome.
+1. Grouping different methods of the same route together makes sense.
 
-2. Maps are clearer representations of routes than vectors.
-   
-   Some libraries (such as Polaris and Pedestal) are already taking advantage of the benefits gained by using data structures to represent routes, but they tend to favor vector-based routes ahead of map-based routes.
-
-  Gate favors map-based routes, whose explicit nature is hopefully more maintainable.
-
-3. Granular application of middleware is really useful.
-  
-   Gate not only plays nicely with existing ring middleware, but attempts to improve the experience by allowing users to easily apply a middleware to a single route or even a single method of a route (in addition to being able to add middleware to an whole app or route hierarchy).
+Read more [here](https://github.com/mischov/gate/wiki/Rationale).
 
 [**Back To Top ⇧**](#contents)
 
@@ -54,7 +49,7 @@ Add the following dependency to your `project.clj` file:
 
 Gate is in early alpha. Both the API and the concepts underlying the library are subject to change, so it is not yet advisable to use Gate for serious projects.
 
-That said, feel free to experiment with Gate and report bugs or make suggestions.
+That said, please feel free to experiment with Gate and report bugs or make suggestions.
 
 [**Back To Top ⇧**](#contents)
 
