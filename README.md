@@ -60,30 +60,27 @@ That said, please feel free to experiment with Gate and report bugs or make sugg
   (:require [gate :refer [defrouter]]
             [gate.handler :refer [defhandler]]))
 
-(comment
-  "A Gate handler is some function that accepts a Ring request.
-   Gate attempts to convert whatever a handler returns into a
-   Ring response.")
+; A Gate handler is some function that accepts a Ring request.
+; Gate attempts to convert whatever a handler returns into a
+; Ring response.
 
 (defn hello-handler
   [req]
   "Hello, World!")
 
-(comment
-  "Since it's no fun to manually pull params out of the request 
-   in every handler, Gate also provides a convinence macro,
-   defhandler, to make accessing params easier.
-  
-   In the following example, the key :name is retrieved from
-   the :params map of the request and bound to the symbol 'name'.")
+; Since it's no fun to manually pull params out of the request 
+; in every handler, Gate also provides a convinence macro,
+; defhandler, to make accessing params easier.
+;  
+; In the following example, the key :name is retrieved from
+; the :params map of the request and bound to the symbol 'name'.
 
 (defhandler greeter
   [name]
   (str "Hello, " name "!"))
 
-(comment
-  "Gate middleware is just standard Ring middleware, so it accepts
-   a handler and returns some function accepting a request.")
+; Gate middleware is just standard Ring middleware, so it accepts
+; a handler and returns some function accepting a request.
 
 (defn enthusiator
   [handler]
@@ -93,10 +90,9 @@ That said, please feel free to experiment with Gate and report bugs or make sugg
           body (get resp :body)]
       (assoc resp :body (str body "!!"))))
 
-(comment
-  "A gate route is a map containing the keys :name and :path, maybe
-   the keys :middleware and :children, and maybe one or more keys
-   representing an HTTP method paired with a handler.")
+; A gate route is a map containing the keys :name and :path, maybe
+; the keys :middleware and :children, and maybe one or more keys
+; representing an HTTP method paired with a handler.
 
 (def quickstart-routes
   [{:name :hello-world
@@ -108,24 +104,22 @@ That said, please feel free to experiment with Gate and report bugs or make sugg
     :middleware [enthusiator]
     :get  greeter}])
 
-(comment
-  "The heart of a Gate app is the router, which takes a sequence
-   of routes and an optional map of router settings and returns a
-   function that attempts to match a Ring request to a handler.")
+; The heart of a Gate app is the router, which takes a sequence
+; of routes and an optional map of router settings and returns a
+; function that attempts to match a Ring request to a handler.
 
 (defrouter router
   quickstart-routes
   {:404-handler (fn [_] "There is nothing here....")
    :resources {:path "/" :root "public"}})
 
-(comment
-  "Run routers like you would run any ring handler.
-  
-   For instance, if you wanted to run this with lein-ring you'd
-   set the following keys in your defproject:
-  
-     :plugins [[lein-ring "0.8.10"]]
-     :ring {:handler yourproj.quickstart/router}")
+; Run routers like you would run any ring handler.
+; 
+; For instance, if you wanted to run this with lein-ring you'd
+; set the following keys in your defproject:
+;
+;   :plugins [[lein-ring "0.8.10"]]
+;   :ring {:handler yourproj.quickstart/router}
 ```
 [**Back To Top ⇧**](#contents)
 
