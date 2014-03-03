@@ -36,10 +36,6 @@
              (next routes)
              (merge-with (partial merge-with merge) (route->trie route) trie)))))
 
-(defn search-trie
-  [segment segments trie prev-splat params]
-  ())
-
 (defn get-last-splat
   [splat last-splat params segments]
   (if splat
