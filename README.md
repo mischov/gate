@@ -136,7 +136,9 @@ Documentation is a work in progress, but what exists can be found in the [Wiki](
 
 ## Performance
 
-A couple of entirely unscientific `ab` tests suggest that Gate and Compojure have very similar performance when it comes to routing a request.
+Unscientific testing suggests that Gate's routing performance is similar to Compojure's for applications with small numbers of routes.
+
+For applications with large numbers of routes, Gate's trie-based router appears to perform better than routing libraries which use the more traditional "check the request against a list of possible routes and return the first match" approach.
 
 [**Back To Top ⇧**](#contents)
 
