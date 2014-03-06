@@ -34,12 +34,12 @@ Add the following dependency to your `project.clj` file:
 
 ## Rationale
 
-Clojure already has a number of strong libraries for url routing, so why should you consider using Gate?
+In an attempt to advance the state of Clojure url routing, Gate:
 
-1. Data makes better routes than macros.
-1. Code needs to be clear and maintainable.
-1. Granular application of middleware is awesome.
-1. Grouping different methods of the same route together makes sense.
+1. Represents routes as data structures instead of macros.
+1. Allows simple application of middleware to both individual routes and groups of routes.
+1. Routes via a trie router, providing faster routing for large route sets.
+1. Promotes clear, maintainable code.
 
 Read more [here](https://github.com/mischov/gate/wiki/Rationale).
 
@@ -138,7 +138,7 @@ Documentation is a work in progress, but what exists can be found in the [Wiki](
 
 Unscientific testing suggests that Gate's routing performance is similar to Compojure's for applications with small numbers of routes.
 
-For applications with large numbers of routes, Gate's trie-based router appears to perform better than routing libraries which use the more traditional "check the request against a list of possible routes and return the first match" approach.
+For applications with large numbers of routes, Gate's trie-based router appears to perform better than routing libraries which use the more traditional "check the request against a list of all possible routes and return the first match" approach.
 
 [**Back To Top ⇧**](#contents)
 
