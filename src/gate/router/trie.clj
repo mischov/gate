@@ -25,6 +25,12 @@
   (let [segments (split-path path)]
     (build-trie segments method [handler path-params])))
 
+(defn recursive-merge
+  [& vals]
+  (if (every? map? vals)
+    (apply merge-with recursive-merge vals)
+    (last vals)))
+
 (defn routes->trie
   [routes]
   (loop [route (first routes)
@@ -34,7 +40,7 @@
       trie
       (recur (first routes)
              (next routes)
-             (merge-with (partial merge-with merge) (route->trie route) trie)))))
+             (recursive-merge (route->trie route) trie)))))
 
 (defn get-last-splat
   [splat last-splat params segments]
