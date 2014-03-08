@@ -1,4 +1,4 @@
-(ns gate.examples.hello-world
+(ns gate.examples.hello-world-example
   (:require [gate :refer [defrouter]]
             [gate.handler :refer [defhandler]]))
 

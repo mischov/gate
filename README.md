@@ -55,72 +55,8 @@ That said, please feel free to experiment with Gate and report bugs or make sugg
 
 ## Quick Start
 
-```clojure
-(ns yourproj.quickstart
-  (:require [gate :refer [defrouter]]
-            [gate.handler :refer [defhandler]]))
+To see Gate in action, check the [hello-world-example](https://github.com/mischov/gate/blob/master/examples/gate/examples/hello_world_example.clj) and the other [examples](https://github.com/mischov/gate/tree/master/examples/gate/examples).
 
-; A Gate handler is some function that accepts a Ring request.
-; Gate attempts to convert whatever a handler returns into a
-; Ring response.
-
-(defn hello-handler
-  [req]
-  "Hello, World!")
-
-; Since it's no fun to manually pull params out of the request 
-; in every handler, Gate also provides a convinence macro,
-; defhandler, to make accessing params easier.
-;  
-; In the following example, the key :name is retrieved from
-; the :params map of the request and bound to the symbol 'name'.
-
-(defhandler greeter
-  [name]
-  (str "Hello, " name "!"))
-
-; Gate middleware is just standard Ring middleware, so it accepts
-; a handler and returns some function accepting a request.
-
-(defn enthusiator
-  [handler]
-  (fn [req]
-    (let [r (update-in req [:params :name] clojure.string/upper-case)
-          resp (handler r)
-          body (get resp :body)]
-      (assoc resp :body (str body "!!"))))
-
-; A gate route is a map containing the keys :name and :path, maybe
-; the keys :middleware and :children, and maybe one or more keys
-; representing an HTTP method paired with a handler.
-
-(def quickstart-routes
-  [{:name :hello-world
-    :path "/"
-    :get  hello-handler
-    :post (fn [_] "None of that now, you hear!")}
-   {:name :hello-person
-    :path "/:name"
-    :middleware [enthusiator]
-    :get  greeter}])
-
-; The heart of a Gate app is the router, which takes a sequence
-; of routes and an optional map of router settings and returns a
-; function that attempts to match a Ring request to a handler.
-
-(defrouter router
-  quickstart-routes
-  {:404-handler (fn [_] "There is nothing here....")
-   :resources {:path "/" :root "public"}})
-
-; Run routers like you would run any ring handler.
-; 
-; For instance, if you wanted to run this with lein-ring you'd
-; set the following keys in your defproject:
-;
-;   :plugins [[lein-ring "0.8.10"]]
-;   :ring {:handler yourproj.quickstart/router}
-```
 [**Back To Top ⇧**](#contents)
 
 ## Documentation
