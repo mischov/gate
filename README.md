@@ -88,5 +88,4 @@ Gate is fortunate enough to be built upon the shoulders of Compojure and Pedesta
 
 Copyright © 2014 Mischov
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License.
