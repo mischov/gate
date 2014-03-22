@@ -20,6 +20,8 @@ Gate is a web routing library for Ring and Clojure.
 - [Status](#status)
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
+    - [API](#api)
+    - [Design](#design)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
@@ -61,12 +63,101 @@ To see Gate in action, check the [hello-world-example](https://github.com/mischo
 
 ## Documentation
 
-Documentation is a work in progress, but what exists can be found in the [Wiki](https://github.com/mischov/gate/wiki):
+### API
 
-- [Routes](https://github.com/mischov/gate/wiki/Routes)
-- [Handlers](https://github.com/mischov/gate/wiki/Handlers)
-- [Middleware](https://github.com/mischov/gate/wiki/Middleware)
-- [Resources](https://github.com/mischov/gate/wiki/Resources)
+All one needs to learn in order to use Gate is how routes are defined, and the macros `gate/defrouter` and `gate.handler/defhandler`.
+
+#### Routes
+
+Routes in Gate are just Clojure maps requiring the keys `:name` and `:path`, and optionally containing a `:middleware` key, a `:children` key, and/or one of the http-method keys (`:get` `:post` `:head` `:put` `:delete` `:trace` `:connect` `:options` or `:any`).
+
+```clojure
+(def paradoxical-routes
+  {:name :simple-route
+   :path "/simple-route"
+   :get  (fn [_] "I am a simple route.")
+   :children [
+              {:name :complex-route
+	       :path "/inversion"
+	       :get (fn [_] "I am not a simple route.")}]})
+
+```
+
+For more about routes, check the [wiki](https://github.com/mischov/gate/wiki/Routes).
+
+[**Back To Top ⇧**](#contents)
+
+#### `gate/defrouter`
+
+Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
+
+```clojure
+(defrouter app
+  [{:name :index
+    :path "/"
+    :get  (fn [_] "I'm an index.")}]
+  {:404-handler (fn [_] "I can't find what you're looking for.")})
+
+; (app {:request-method :get :uri "/"})
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "I'm an index."}
+
+; (app {:request-method :get :uri "/the-answer-to-life-and-everything"})
+; > {:status 404, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "I can't find what you're looking for."}
+```
+
+For a full list of possible router settings, check the [wiki](https://github.com/mischov/gate/wiki/Router-Settings).
+
+[**Back To Top ⇧**](#contents)
+
+#### `gate.handler/defhandler`
+
+A Gate handler is just any function that accepts a Ring request and returns something.
+
+```clojure
+(defn personalized-greeter
+  [request]
+  (let [visitor-name (get-in request [:params :visitor-name])]
+    (str "Hello, " visitor-name "!")))
+```
+
+However, manually pulling the params out of the request like that becomes very old, very fast.
+
+To combat all that boilerplate, Gate introduces the convenience macro defhandler. Defhandler will be familiar to Compojure users since it reimplements much Compojure's request-map destructuring, but it is subtly different (and also decomplected out of route definition).
+
+One of the most important differences between defhandler and Compojure is that defhandler allows parameters to be coerced from strings to other types of data at the time that they are extracted from :params.
+
+```clojure
+(defhandler arithmetic
+  [op [n1 :num] [n2 :num]]
+  (case op
+    "add" (str (+ n1 n2))
+    "sub" (str (- n1 n2))
+    "mult" (str (* n1 n2))
+    "div" (str (/ n1 n2))
+    (str "Operation '" op "' not recognized.")))
+
+(defrouter app
+  [{:name :arith
+    :path "/:op/:n1/:n2"
+    :get  arithmetic}])
+
+; (app {:request-method :get :uri "/add/2/2"})
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "4"}
+
+; (app {:request-method :get :uri "/div/2/2"})
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "1"}
+
+; (app {:request-method :get :uri "/raise/2/2"})
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "Operation 'raise' not recognized."}
+```
+
+For more about defhandler and param coercion, see the [wiki](https://github.com/mischov/gate/wiki/Handlers).
+
+[**Back To Top ⇧**](#contents)
+
+### Design
+
+Documentation is still a work in progress, but for more information about the design can be found in the [wiki](https://github.com/mischov/gate/wiki).
 
 [**Back To Top ⇧**](#contents)
 
