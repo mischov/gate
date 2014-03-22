@@ -78,8 +78,8 @@ Routes in Gate are just Clojure maps requiring the keys `:name` and `:path`, and
    :get  (fn [_] "I am a simple route.")
    :children [
               {:name :complex-route
-	       :path "/inversion"
-	       :get (fn [_] "I am not a simple route.")}]})
+               :path "/inversion"
+               :get (fn [_] "I am not a simple route.")}]})
 
 ```
 
