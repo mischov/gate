@@ -1,14 +1,7 @@
 (ns gate.routes
-  (:require [gate.routes.dna :refer [create-route-dna]]
+  (:require [gate.routes.dna :refer [create-route-dna blank-dna]]
             [gate.routes.url :refer [add-url-fn]]
             [gate.routes.handler :refer [expand-handlers]]))
-
-(def default-dna
-  "DNA is information a route passes to child routes."
-  {:path nil
-   :path-parts []
-   :path-params []
-   :middleware []})
 
 ;; expand-children defined in terms of expand-routes.
 (declare expand-routes)
@@ -33,10 +26,10 @@
 
 (defn expand-route
   "Expands a concise route into a sequence of expanded routes."
-  ([route] (expand-route route default-dna))
-  ([route parent-dna]
+  ([route] (expand-route route blank-dna))
+  ([route base-dna]
        (when (valid? route)
-         (let [route-dna (create-route-dna route parent-dna)
+         (let [route-dna (create-route-dna route base-dna)
                expanded-children (expand-children route route-dna)]
            (-> route
                (merge route-dna)
@@ -46,8 +39,8 @@
 
 (defn expand-routes
   "Mapcats expand-route over a sequence of concise routes to
-   create a flat sequence of full-routes."
-  ([routes] (expand-routes routes default-dna))
-  ([routes parent-dna]
-       (mapcat #(expand-route % parent-dna) routes)))
+   create a flat sequence of expanded routes."
+  ([routes] (expand-routes routes blank-dna))
+  ([routes base-dna]
+       (mapcat #(expand-route % base-dna) routes)))
 
