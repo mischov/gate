@@ -65,7 +65,7 @@ To see Gate in action, check the [hello-world-example](https://github.com/mischo
 
 ### API
 
-All one needs to learn in order to use Gate is how routes are defined, and the macros `gate/defrouter` and `gate.handler/defhandler`.
+All one needs to learn in order to use Gate is how routes are defined and the macros `gate/defrouter` and `gate.handler/defhandler`.
 
 #### Routes
 
