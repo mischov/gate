@@ -99,10 +99,12 @@ Provided a router name, a sequence of routes, and optionally a map of router set
   {:404-handler (fn [_] "I can't find what you're looking for.")})
 
 ; (app {:request-method :get :uri "/"})
-; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "I'm an index."}
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"},
+;    :body "I'm an index."}
 
 ; (app {:request-method :get :uri "/the-answer-to-life-and-everything"})
-; > {:status 404, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "I can't find what you're looking for."}
+; > {:status 404, :headers {"Content-Type" "text/html; charset=utf-8"},
+;    :body "I can't find what you're looking for."}
 ```
 
 For a full list of possible router settings, check the [wiki](https://github.com/mischov/gate/wiki/Router-Settings).
@@ -142,13 +144,16 @@ One of the most important differences between defhandler and Compojure is that d
     :get  arithmetic}])
 
 ; (app {:request-method :get :uri "/add/2/2"})
-; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "4"}
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"},
+;    :body "4"}
 
 ; (app {:request-method :get :uri "/div/2/2"})
-; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "1"}
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"},
+;    :body "1"}
 
 ; (app {:request-method :get :uri "/raise/2/2"})
-; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "Operation 'raise' not recognized."}
+; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"},
+;    :body "Operation 'raise' not recognized."}
 ```
 
 For more about defhandler and param coercion, see the [wiki](https://github.com/mischov/gate/wiki/Handlers).
