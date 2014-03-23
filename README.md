@@ -19,11 +19,11 @@ Gate is a web routing library for Ring and Clojure.
 - [Rationale](#rationale)
 - [Status](#status)
 - [Quick Start](#quick-start)
+- [API](#api)
+    - [Routes](#routes)
+    - [`defrouter`](#defrouter)
+    - [`defhandler`](#defhandler)
 - [Documentation](#documentation)
-    - [API](#api)
-         - [Route Structure](#route-structure)
-	 - [`defrouter`](#defrouter)
-	 - [`defhandler`](#defhandler)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
@@ -63,19 +63,15 @@ To see Gate in action, check the [hello-world-example](https://github.com/mischo
 
 [**Back To Top ⇧**](#contents)
 
-## Documentation
-
-Documentation is a work in progress, but that which exists can be found in the [wiki](https://github.com/mischov/gate/wiki).
-
-### API
+## API
 
 In order to get started with Gate, you only need to know:
 
-1. Route Structure
-2. `defrouter`
-3. `defhandler`
+1. [How Gate defines routes.](#routes)
+2. [How to create a router.](#defrouter)
+3. [How to reduce handler boilerplate.](#defhandler)
 
-#### Route Structure
+### Routes
 
 Routes in Gate are just Clojure maps containing some combination of the following keys:
 
@@ -105,7 +101,7 @@ For more about routes, check the [wiki](https://github.com/mischov/gate/wiki/Rou
 
 [**Back To Top ⇧**](#contents)
 
-#### `defrouter`
+### `defrouter`
 
 Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter (`gate/defrouter`) binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
 
@@ -129,7 +125,7 @@ For a full list of possible router settings, check the [wiki](https://github.com
 
 [**Back To Top ⇧**](#contents)
 
-#### `defhandler`
+### `defhandler`
 
 A Gate handler is just any function that accepts a Ring request and returns something.
 
@@ -183,6 +179,10 @@ One of the most important differences between defhandler and Compojure is that d
 For more about defhandler and param coercion, see the [wiki](https://github.com/mischov/gate/wiki/Handlers).
 
 [**Back To Top ⇧**](#contents)
+
+## Documentation
+
+Additional documentation is a work in progress, but that which exists can be found in the [wiki](https://github.com/mischov/gate/wiki).
 
 ## Performance
 
