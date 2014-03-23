@@ -21,8 +21,8 @@ Gate is a web routing library for Ring and Clojure.
 - [Quick Start](#quick-start)
 - [API](#api)
     - [Routes](#routes)
-    - [`defrouter`](#defrouter)
-    - [`defhandler`](#defhandler)
+    - [defrouter](#defrouter)
+    - [defhandler](#defhandler)
 - [Documentation](#documentation)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
@@ -79,9 +79,9 @@ Routes in Gate are just Clojure maps containing some combination of the followin
 | --- | --------- | ---------- | ----------- |
 | `:name` | Required | `Keyword` | The route's name, used for reverse-routing. |
 | `:path` | Required | `String` | The route's path (or a portion thereof). Gate paths support `:variables` and `*splats`. |
-| `:middleware` | Optional | `[Middleware]` | A seq containing middleware to be applied to the route's handlers. |
+| `:middleware` | Optional | `[Middleware]` | A seq containing [middleware](https://github.com/mischov/gate/wiki/Middleware) to be applied to the route's handlers. |
 | `:children`   | Optional | `[Route]` | A seq containing other routes. Child routes inherit their parent's path and middleware, which is then combined with their own path and middleware. |
-| `:get` `:post` `:head` `:put` `:delete` `:trace` `:connect` `:options` `:any` | Optional | `Handler` | These HTTP method keys are paired with a Gate handler, which is any function that accepts a Ring request and returns something. Pairing a method key with a handler defines how the route will react to that particular HTTP request method. Routes allow multiple method keys (ie, both :get and :post). |
+| `:get` `:post` `:head` `:put` `:delete` `:trace` `:connect` `:options` `:any` | Optional | `Handler` | HTTP method keys are each paired with a Gate handler, which is any function that accepts a Ring request and returns something. Pairing a method key with a handler defines how the route will react to that particular HTTP request method. Routes may contain multiple method keys (ie, both :get and :post). |
    
 ```clojure
 (def paradoxical-routes
@@ -97,11 +97,11 @@ Routes in Gate are just Clojure maps containing some combination of the followin
 ; and "/simple-route/inversion".
 ```
 
-For more about routes, check the [wiki](https://github.com/mischov/gate/wiki/Routes).
+For more about routes, check [wiki/Routes](https://github.com/mischov/gate/wiki/Routes).
 
 [**Back To Top ⇧**](#contents)
 
-### `defrouter`
+### defrouter
 
 Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter (`gate/defrouter`) binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
 
@@ -121,11 +121,11 @@ Provided a router name, a sequence of routes, and optionally a map of router set
 ;    :body "I can't find what you're looking for."}
 ```
 
-For a full list of possible router settings, check the [wiki](https://github.com/mischov/gate/wiki/Router-Settings).
+For a full list of possible router settings, check [wiki/Router-Settings](https://github.com/mischov/gate/wiki/Router-Settings).
 
 [**Back To Top ⇧**](#contents)
 
-### `defhandler`
+### defhandler
 
 A Gate handler is just any function that accepts a Ring request and returns something.
 
@@ -176,7 +176,7 @@ One of the most important differences between defhandler and Compojure is that d
 ;    :body "Operation 'raise' not recognized."}
 ```
 
-For more about defhandler and param coercion, see the [wiki](https://github.com/mischov/gate/wiki/Handlers).
+For more about defhandler and param coercion, see [wiki/Handlers](https://github.com/mischov/gate/wiki/Handlers).
 
 [**Back To Top ⇧**](#contents)
 
