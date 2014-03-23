@@ -10,7 +10,8 @@
   (let [segments (trie/split-path uri)
         [methods raw-params] (trie/search-trie router-trie segments)]
     (when methods
-      (when-let [[handler path-params] (get methods request-method)]
+      (when-let [[handler path-params] (or (get methods request-method)
+                                           (get methods :any))]
         (let [params (zipmap path-params raw-params)
               req (conj request {:params params
                                  :path-params params})]
