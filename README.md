@@ -21,7 +21,9 @@ Gate is a web routing library for Ring and Clojure.
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
     - [API](#api)
-    - [Design](#design)
+        [Route Structure](#route-structure)
+	[`defrouter`](#defrouter)
+	[`defhandler`](#defhandler)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
@@ -63,13 +65,48 @@ To see Gate in action, check the [hello-world-example](https://github.com/mischo
 
 ## Documentation
 
+Documentation is a work in progress, but that which exists can be found in the [wiki](https://github.com/mischov/gate/wiki).
+
 ### API
 
-All one needs to learn in order to use Gate is how routes are defined and the macros `gate/defrouter` and `gate.handler/defhandler`.
+In order to get started with Gate, you only need to know:
 
-#### Routes
+1. Route Structure
+2. `defrouter`
+3. `defhandler`
 
-Routes in Gate are just Clojure maps requiring the keys `:name` and `:path`, and optionally containing a `:middleware` key, a `:children` key, and/or one of the http-method keys (`:get` `:post` `:head` `:put` `:delete` `:trace` `:connect` `:options` or `:any`).
+#### Route Structure
+
+Routes in Gate are just Clojure maps containing some combination of the following keys:
+
+1. `:name`
+   (Required, Keyword)
+
+   A keyword representing the route's name.
+2. `:path`
+   (Required, String)
+
+   A string representing the route's path (or a portion of the route's path).
+3. `:middlware`
+   (Optional, [Middleware])
+
+   A seq containing middleware to be applied to the route's handler.
+4. `:children`
+   (Optional, [Route])
+
+   A seq containing other routes. Child routes inherit their parent's path
+   and middleware which is then combined with their own path and middleware.
+5. HTTP Method Keys
+   (Optional, Handler)
+
+   The HTTP method keys are `:get`, `:post`, `:head`, `:put`, `:delete`,
+   `:trace`, `:connect`, `:options`, and `:any`.
+
+   These keys are paired with a Gate handler, which is any function that
+   accepts a Ring request and returns something.
+
+   Each key represents how the route will react to that particular HTTP
+   request method, except for :any which reacts to any HTTP request.
 
 ```clojure
 (def paradoxical-routes
@@ -81,15 +118,17 @@ Routes in Gate are just Clojure maps requiring the keys `:name` and `:path`, and
                :path "/inversion"
                :get (fn [_] "I am not a simple route.")}]})
 
+; Defines routes that match GET requests to "/simple-route"
+; and "/simple-route/inversion".
 ```
 
 For more about routes, check the [wiki](https://github.com/mischov/gate/wiki/Routes).
 
 [**Back To Top ⇧**](#contents)
 
-#### `gate/defrouter`
+#### `defrouter`
 
-Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
+Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter (`gate/defrouter`) binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
 
 ```clojure
 (defrouter app
@@ -111,7 +150,7 @@ For a full list of possible router settings, check the [wiki](https://github.com
 
 [**Back To Top ⇧**](#contents)
 
-#### `gate.handler/defhandler`
+#### `defhandler`
 
 A Gate handler is just any function that accepts a Ring request and returns something.
 
@@ -124,7 +163,13 @@ A Gate handler is just any function that accepts a Ring request and returns some
 
 However, manually pulling the params out of the request like that becomes very old, very fast.
 
-To combat all that boilerplate, Gate introduces the convenience macro defhandler. Defhandler will be familiar to Compojure users since it reimplements much Compojure's request-map destructuring, but it is subtly different (and also decomplected out of route definition).
+To combat all that boilerplate, Gate introduces the convenience macro defhandler (`gate.handler/defhandler`). Defhandler will be familiar to Compojure users since it reimplements much Compojure's request-map destructuring, but it is subtly different (and also decomplected out of route definition).
+
+```clojure
+(defhandler personalized-greeter
+  [visitor-name]
+  (str "Hello, " visitor-name "!"))
+```
 
 One of the most important differences between defhandler and Compojure is that defhandler allows parameters to be coerced from strings to other types of data at the time that they are extracted from :params.
 
@@ -157,12 +202,6 @@ One of the most important differences between defhandler and Compojure is that d
 ```
 
 For more about defhandler and param coercion, see the [wiki](https://github.com/mischov/gate/wiki/Handlers).
-
-[**Back To Top ⇧**](#contents)
-
-### Design
-
-Documentation is still a work in progress, but for more information about the design can be found in the [wiki](https://github.com/mischov/gate/wiki).
 
 [**Back To Top ⇧**](#contents)
 
