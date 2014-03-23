@@ -21,9 +21,9 @@ Gate is a web routing library for Ring and Clojure.
 - [Quick Start](#quick-start)
 - [Documentation](#documentation)
     - [API](#api)
-        [Route Structure](#route-structure)
-	[`defrouter`](#defrouter)
-	[`defhandler`](#defhandler)
+         - [Route Structure](#route-structure)
+	 - [`defrouter`](#defrouter)
+	 - [`defhandler`](#defhandler)
 - [Performance](#performance)
 - [Acknowledgements](#acknowledgements)
 
@@ -79,35 +79,14 @@ In order to get started with Gate, you only need to know:
 
 Routes in Gate are just Clojure maps containing some combination of the following keys:
 
-1. `:name`
-   (Required, Keyword)
-
-   A keyword representing the route's name.
-2. `:path`
-   (Required, String)
-
-   A string representing the route's path (or a portion of the route's path).
-3. `:middlware`
-   (Optional, [Middleware])
-
-   A seq containing middleware to be applied to the route's handler.
-4. `:children`
-   (Optional, [Route])
-
-   A seq containing other routes. Child routes inherit their parent's path
-   and middleware which is then combined with their own path and middleware.
-5. HTTP Method Keys
-   (Optional, Handler)
-
-   The HTTP method keys are `:get`, `:post`, `:head`, `:put`, `:delete`,
-   `:trace`, `:connect`, `:options`, and `:any`.
-
-   These keys are paired with a Gate handler, which is any function that
-   accepts a Ring request and returns something.
-
-   Each key represents how the route will react to that particular HTTP
-   request method, except for :any which reacts to any HTTP request.
-
+| Key | Required? | Value Type | Description |
+| --- | --------- | ---------- | ----------- |
+| `:name` | Required | `Keyword` | The route's name, used for reverse-routing. |
+| `:path` | Required | `String` | The route's path (or a portion thereof). Gate paths support `:variables` and `*splats`. |
+| `:middleware` | Optional | `[Middleware]` | A seq containing middleware to be applied to the route's handlers. |
+| `:children`   | Optional | `[Route]` | A seq containing other routes. Child routes inherit their parent's path and middleware, which is then combined with their own path and middleware. |
+| `:get` `:post` `:head` `:put` `:delete` `:trace` `:connect` `:options` `:any` | Optional | `Handler` | These HTTP method keys are paired with a Gate handler, which is any function that accepts a Ring request and returns something. Pairing a method key with a handler defines how the route will react to that particular HTTP request method. Routes allow multiple method keys (ie, both :get and :post). |
+   
 ```clojure
 (def paradoxical-routes
   {:name :simple-route
