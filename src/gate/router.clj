@@ -1,6 +1,5 @@
 (ns gate.router
   (:require [gate.router.trie :as trie]
-            [gate.router.urls :refer [create-url-builder]]
             [gate.router.resources :refer [get-resource-matching]]
             [gate.router.preware :refer [get-preware]]
             [gate.util.response.not-found :refer [add-not-found]]))
@@ -21,11 +20,9 @@
  ([routes] (create-router routes {}))
  ([routes settings]
       (let [router-trie (trie/routes->trie routes)
-            url-builder (create-url-builder routes)
             preware (get-preware settings)]
         (fn [request]
           (let [request (-> (if preware (preware request) request)
-                            (assoc :url-builder url-builder)
                             (add-not-found settings))]
             (or (get-resource-matching request settings)
                 (get-route-matching request router-trie)

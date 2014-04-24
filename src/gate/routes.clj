@@ -1,6 +1,5 @@
 (ns gate.routes
   (:require [gate.routes.dna :refer [create-route-dna blank-dna]]
-            [gate.routes.url :refer [add-url-fn]]
             [gate.routes.handler :refer [expand-handlers]]))
 
 ;; expand-children defined in terms of expand-routes.
@@ -33,7 +32,6 @@
                expanded-children (expand-children route route-dna)]
            (-> route
                (merge route-dna)
-               (add-url-fn)
                (expand-handlers)
                (concat expanded-children))))))
 
