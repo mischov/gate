@@ -1,6 +1,7 @@
 (ns gate.handler.param
   (:require [clojure.tools.reader.edn :as edn]))
 
+
 (defn read-number
   "If `s` appears to be a number, read-number will attempt
    to read it.
@@ -12,9 +13,14 @@
    octal then you will be displeased by the result."
   [^String s]
   (cond
-   (re-find #"^-?\d+\.?\d*$" s) (edn/read-string s)
-   (re-find #"^\.\d+$" s) (edn/read-string (str "0" s))
+   (re-find #"^-?\d+\.?\d*$" s)
+     (edn/read-string s)
+   
+   (re-find #"^\.\d+$" s)
+     (edn/read-string (str "0" s))
+   
    :else nil))
+
 
 (defn read-integer
   "Reads a string representing an integer (the mathematical
@@ -27,17 +33,20 @@
   (when (re-find #"^\d+$" s)
     (Long/parseLong s)))
 
+
 (defn read-decimal
   "Reads a string representing a decimal into a double."
   [^String s]
   (when (re-find #"^\d*\.\d+$" s)
     (Double/parseDouble s)))
 
+
 (defn read-keyword
   "Reads a string representing a keyword into a lowercase
    keyword."
   [^String s]
   (keyword (clojure.string/lower-case s)))
+
 
 (def readers
   {:num read-number

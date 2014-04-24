@@ -1,11 +1,13 @@
 (ns gate.util.response.not-found)
 
+
 (defn issue-404
   [handler request]
    (let [handler (if (fn? handler) (handler request) handler)]
      {:status 404
       :headers {"content-type" "text/html; charset=utf-8"}
       :body handler}))
+
 
 (defn add-not-found
   [request settings]
