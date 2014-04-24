@@ -2,8 +2,10 @@
   (:require [gate.middleware :as middleware]
             [gate.util.response :as response]))
 
-(def request-methods #{:get :post :head :put :delete
-                       :trace :connect :options :any})
+
+(def request-methods
+  #{:get :post :head :put :delete :trace :connect :options :any})
+
 
 (defn ^:private wrap-handler
   "Wraps handler with middleware after ensuring that it
@@ -14,8 +16,10 @@
       (fn [request]
         (wrapped-handler request))))
 
+
 (defprotocol Handler
   (read-handler [handler middleware]))
+
 
 (extend-protocol Handler
   clojure.lang.IFn
@@ -23,6 +27,7 @@
     [handler middlewares]
     {:handler-fn (.getName (class handler))
      :handler (wrap-handler handler middlewares)})
+  
   clojure.lang.IPersistentMap
   (read-handler
     [handler middlewares]
@@ -30,6 +35,7 @@
           m (get handler :middleware)]
         {:handler-fn (.getName (class h))
          :handler (wrap-handler h (concat middlewares m))})))
+
 
 (defn expand-handlers
   "Creates an expanded route method in route."

@@ -1,6 +1,7 @@
 (ns gate.routes.dna
   (:require [gate.routes.path :refer [parse-path]]))
 
+
 (def blank-dna
   "DNA is information used by routes during expansion.
 
@@ -10,12 +11,14 @@
    :path-params []
    :middleware []})
 
+
 (defn ^:private update-dna-path
   "Initializes a route's dna by combining parent-dna with
    information from the route's path."
   [parent-dna route]
   (let [p (get route :path)]
     (parse-path p parent-dna)))
+
 
 (defn ^:private update-dna-middleware
   "Combines route and parent middleware then adds the result
@@ -25,6 +28,7 @@
         pm (get route-dna :middleware)]
     (assoc route-dna :middleware (concat pm m))))
 
+
 (defn create-route-dna
   "A route's dna is created by updating it's parent-dna
    with information from a route's path and middleware."
@@ -32,6 +36,7 @@
   (-> parent-dna
       (update-dna-path route)
       (update-dna-middleware route)))
+
 
 (defn init-dna
   "A router's base-dna is created by combining either the

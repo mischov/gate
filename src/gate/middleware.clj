@@ -10,7 +10,6 @@
 
 
 (extend-protocol Middleware
-  
   Sequential
   (combine [ms middlewares]
     (loop [m (first ms)
@@ -29,10 +28,8 @@
 
 (defn wrap-handler
   [handler middlewares]
-  
   (let [middlewares (combine middlewares [])
         wrap (apply comp middlewares)]
-    
     (if wrap
       (wrap handler)
       handler)))

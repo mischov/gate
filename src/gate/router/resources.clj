@@ -4,16 +4,18 @@
             [ring.util.response :refer [resource-response
                                         get-header]]))
 
+
 (defn ^:private expand-uri
   [uri resource-settings]
   (let [default-settings {:path "/" :root "public"}
-        {:keys [path root]} (merge default-settings
-                                   resource-settings)]
+        {:keys [path root]} (merge default-settings resource-settings)]
     (str root "/" (string/replace-first uri path ""))))
+
 
 (defn ^:private set-content-type
   [response content-type]
   (assoc-in response [:headers "Content-Type"] content-type))
+
 
 (defn ^:private add-content-type
   "If response has no Content-Type header, attempts
@@ -28,6 +30,7 @@
       (set-content-type response (or mime-type
                                      "application/octet-stream")))))
 
+
 (defn ^:private search-for-resource-matching
   [request resource-settings]
   (let [uri (get request :uri)
@@ -38,6 +41,7 @@
               response (resource-response resource-uri)]
           (when response
             (add-content-type response uri additional-types))))))
+
 
 (defn get-resource-matching
   "When there are resource settings, attempts to find a

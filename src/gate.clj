@@ -21,10 +21,8 @@
 
    For performance reasons, you want routes expanded at compile
    time."
-  [name routes & [router-settings]]
-  
+  [name routes & [router-settings]]  
   `(let [dna# (init-dna ~router-settings)]
-     
      (def ~name
        (create-router (expand-routes ~routes dna#) ~router-settings))))
 
@@ -40,6 +38,5 @@
    Using a symbol for req-bindings binds the whole request to
    that symbol."
   [name req-bindings & body]
-  
   `(def ~name
      ~(create-handler req-bindings body)))

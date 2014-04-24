@@ -1,6 +1,7 @@
 (ns gate.router.preware
   (:require [gate.middleware :refer [combine]]))
 
+
 (defn get-preware
   "Preware fns are applied to a request before it is routed.
 
