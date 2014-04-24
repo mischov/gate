@@ -1,6 +1,5 @@
 (ns gate.examples.hello-world-example
-  (:require [gate :refer [defrouter]]
-            [gate.handler :refer [defhandler]]))
+  (:require [gate :refer [defrouter defhandler]]))
 
 ;; A Gate handler is some function that accepts a Ring request.
 ;;
@@ -12,8 +11,8 @@
   "Hello, World!")
 
 ;; Because manually pulling parameters out of a request
-;; can get tedious, gate.handler provides a convenience
-;; macro, defhandler, to make it easier.
+;; can get tedious, gate provides a convenience macro,
+;; defhandler, to make it easier.
 ;;
 ;; In the following example, defhandler gets the :name key
 ;; from the request :params and binds it to the symbol `name`.
