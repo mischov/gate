@@ -4,8 +4,7 @@
 
 (defprotocol Middleware
   "Middleware can either be a Ring middleware function
-   or a seq of Ring middleware functions."
-  
+   or a seq of Ring middleware functions."  
   (combine [middleware middlewares]))
 
 
