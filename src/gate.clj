@@ -5,11 +5,12 @@
             [gate.router]
             [gate.handler]))
 
+
 (import-fn gate.routes.dna/init-dna)
 (import-fn gate.routes/expand-routes)
 (import-fn gate.router/create-router)
-
 (import-fn gate.handler/create-handler)
+
 
 (defmacro defrouter
   "Expands a sequence of user-defined routes and creates
@@ -21,9 +22,12 @@
    For performance reasons, you want routes expanded at compile
    time."
   [name routes & [router-settings]]
+  
   `(let [dna# (init-dna ~router-settings)]
+     
      (def ~name
        (create-router (expand-routes ~routes dna#) ~router-settings))))
+
 
 (defmacro defhandler
   "Convinience function for constructing Gate handlers.
@@ -36,5 +40,6 @@
    Using a symbol for req-bindings binds the whole request to
    that symbol."
   [name req-bindings & body]
+  
   `(def ~name
      ~(create-handler req-bindings body)))
