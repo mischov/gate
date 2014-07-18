@@ -1,5 +1,5 @@
 (ns gate.examples.hello-world-example
-  (:require [gate :refer [defrouter defhandler]]))
+  (:require [gate :refer [defrouter defhandler handler]]))
 
 ;; A Gate handler is some function that accepts a Ring request.
 ;;
@@ -21,6 +21,9 @@
   [name]
   (str "Hello, " name "!"))
 
+;; There is also an anonymous version (ie, fn vs defn) of
+;; defhandler named handler.
+
 ;; A Gate router takes a list of routes and an optional map
 ;; of options and returns a function that attempts to find
 ;; a route matching a Ring request.
@@ -33,7 +36,7 @@
                {:name :hello-name
                 :path "/:name"
                 :get hello-name}]}]
-  {:404-handler (fn [_] "Nothing here to see! Carry on!")})
+  {:404-handler (handler [] "Nothing here to see! Carry on!")})
 
 ;; (app {:uri "/hello" :request-method :get})
 ;; => {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "Hello, World!"}
