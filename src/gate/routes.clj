@@ -10,29 +10,27 @@
 (defn ^:private expand-children
   "Expands a sequence of child routes."
   [route route-dna]
+  
   (when-let [children (get route :children)]
     (expand-routes children route-dna)))
 
 
 (defn valid?
   "Returns true if route is valid, otherwise throws."
-  [route]  
-  (let [name (get route :name)
-        path (get route :path)]  
-    (cond     
-     (nil? name)
-       (throw (ex-info (str "Routes require a :name key, but this key is missing from: " route) {}))
+  [{:keys [path] :as route}]
+  
+  (cond
+   (nil? path)
+     (throw (ex-info (str "Routes require a :path key, but this key is missing from: " route) {}))
        
-     (nil? path)
-       (throw (ex-info (str "Routes require a :path key, but this key is missing from: " route) {}))
-       
-     :else true)))
+   :else true))
 
 
 (defn expand-route
   "Expands a concise route into a sequence of expanded routes."
   ([route] (expand-route route blank-dna))
   ([route base-dna]
+     
        (when (valid? route)
          (let [route-dna (create-route-dna route base-dna)
                expanded-children (expand-children route route-dna)]
@@ -47,5 +45,6 @@
    create a flat sequence of expanded routes."
   ([routes] (expand-routes routes blank-dna))
   ([routes base-dna]
+     
        (mapcat #(expand-route % base-dna) routes)))
 

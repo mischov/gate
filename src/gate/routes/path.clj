@@ -9,6 +9,7 @@
 (defn ^:private parse-path-token
   "Parses path-token and updates appropriate values in result."
   [result string]
+  
   (condp re-matches string
     #"^:(.+)$" :>>
       (fn [[_ token]]
@@ -32,6 +33,7 @@
   `:path-parts`, `:path-params`, `:path-constraints`, and
   `:path`."
   ([pattern parent-dna]
+     
      (if-let [m (re-matches #"/(.*)" pattern)]
        (let [[_ path] m]
          (reduce parse-path-token

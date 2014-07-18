@@ -21,14 +21,16 @@
 
    For performance reasons, you want routes expanded at compile
    time."
-  [name routes & [router-settings]]  
+  [name routes & [router-settings]]
+  
   `(let [dna# (init-dna ~router-settings)]
      (def ~name
        (create-router (expand-routes ~routes dna#) ~router-settings))))
 
 
-(defmacro defhandler
-  "Convinience function for constructing Gate handlers.
+(defmacro handler
+  "Convincience macro for constructing anonymous Gate
+   handlers with easy access to request params.
 
    Using a vector of symbols for req-bindings binds names from
    the :params key of a ring request map, though the whole request
@@ -37,6 +39,14 @@
 
    Using a symbol for req-bindings binds the whole request to
    that symbol."
+  [req-bindings & body]
+
+  (create-handler req-bindings body))
+
+
+(defmacro defhandler
+  "Convinience macro for defining named Gate handlers."
   [name req-bindings & body]
+  
   `(def ~name
      ~(create-handler req-bindings body)))

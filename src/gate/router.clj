@@ -7,6 +7,7 @@
 
 (defn get-route-matching
   [{:keys [uri request-method] :as request} router-trie]
+  
   (let [segments (trie/split-path uri)
         [methods raw-params] (trie/search-trie router-trie segments)]
     (when methods  
@@ -21,6 +22,7 @@
 (defn create-router
  ([routes] (create-router routes {}))
  ([routes settings]
+    
     (let [router-trie (trie/routes->trie routes)
           preware (get-preware settings)]
       (fn [request]

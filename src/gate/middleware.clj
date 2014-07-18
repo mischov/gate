@@ -20,13 +20,12 @@
   
   Fn
   (combine [m middlewares]
-    (if (some #{m} middlewares)
-      middlewares
-      (conj middlewares m))))
+    (conj middlewares m)))
 
 
 (defn wrap-handler
   [handler middlewares]
+  
   (let [middlewares (combine middlewares [])
         wrap (apply comp middlewares)]
     (if wrap

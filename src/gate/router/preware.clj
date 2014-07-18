@@ -11,5 +11,6 @@
    These functions accept a Ring request and return a Ring
    request."
   [settings]
+  
   (when-let [preware (get settings :preware)]
     (apply comp (combine preware []))))

@@ -11,6 +11,7 @@
   "Wraps handler with middleware after ensuring that it
    returns a Ring response."
   [handler middlewares]
+  
     (let [handler (fn [request] (response/render (handler request) request))
           wrapped-handler (middleware/wrap-handler handler middlewares)]
       (fn [request]
@@ -40,6 +41,7 @@
 (defn expand-handlers
   "Creates an expanded route method in route."
   [route]
+  
   (when-let [handlers (filter #(request-methods (first %))  route)]
     (let [r (into {} (filter #(not (request-methods (first %))) route))
           middlewares (get route :middleware)]
