@@ -12,6 +12,7 @@
    octal. If you were not trying to pass this function an
    octal then you will be displeased by the result."
   [^String s]
+  
   (cond
    (re-find #"^-?\d+\.?\d*$" s)
      (edn/read-string s)
@@ -30,6 +31,7 @@
    to represent all integers smaller than bigints, so it
    seemed like a good idea to follow suit."
   [^String s]
+  
   (when (re-find #"^\d+$" s)
     (Long/parseLong s)))
 
@@ -37,6 +39,7 @@
 (defn read-decimal
   "Reads a string representing a decimal into a double."
   [^String s]
+  
   (when (re-find #"^\d*\.\d+$" s)
     (Double/parseDouble s)))
 
@@ -45,6 +48,7 @@
   "Reads a string representing a keyword into a lowercase
    keyword."
   [^String s]
+  
   (keyword (clojure.string/lower-case s)))
 
 

@@ -31,7 +31,7 @@ Gate is a web routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.15"]
+[gate "0.0.16"]
 ```
 [**Back To Top ⇧**](#contents)
 
@@ -132,7 +132,7 @@ A Gate handler is just any function that accepts a Ring request and returns some
 
 However, manually pulling the params out of the request like that becomes very old, very fast.
 
-To combat all that boilerplate, Gate introduces the convenience macros handler and defhandler. These macros will be familiar to Compojure users since it reimplements much Compojure's request-map destructuring, but it is subtly different (and also decomplected out of route definition).
+To combat all that boilerplate, Gate introduces the convenience macros handler and defhandler. These macros will be familiar to Compojure users since they reimplement much Compojure's request-map destructuring, but they are subtly different (and also decomplected out of route definition).
 
 ```clojure
 
@@ -146,7 +146,7 @@ To combat all that boilerplate, Gate introduces the convenience macros handler a
   (str "Hello, " visitor-name "!"))
 ```
 
-One of the most important differences between handler/defhandler and Compojure is that defhandler allows parameters to be coerced from strings to other types of data at the time that they are extracted from :params.
+One of the most important differences between handler/defhandler and Compojure is that handler/defhandler allows parameters to be coerced from strings to other types of data at the time that they are extracted from :params.
 
 ```clojure
 (defhandler arithmetic
