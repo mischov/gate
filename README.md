@@ -37,11 +37,12 @@ Add the following dependency to your `project.clj` file:
 
 ## Rationale
 
-Gate:
+#### Gate:
 
-1. Represents routes as data structures instead of macros.
-1. Allows simple application of middleware to both individual routes and groups of routes.
-1. Routes via a trie router, providing faster routing for large route sets.
+1. Represents routes as data instead of as macros.
+1. Decomplects handler creation from route creation.
+1. Allows easy application of middleware to both individual routes and groups of routes.
+1. Stays fast, even when routing over large sets of routes.
 
 Read more [here](https://github.com/mischov/gate/wiki/Rationale).
 
@@ -49,15 +50,17 @@ Read more [here](https://github.com/mischov/gate/wiki/Rationale).
 
 ## Status
 
-Gate is in early alpha. Both the API and the concepts underlying the library are subject to change, so it is not yet advisable to use Gate for serious projects.
+Gate is in **early alpha**.
 
-That said, please feel free to experiment with Gate and report bugs or make suggestions.
+Both the API and the concepts underlying the library are subject to change, so it is not yet advisable to use Gate in production.
+
+Gate does work, however, and is waiting for you to experiment with it.
 
 [**Back To Top ⇧**](#contents)
 
 ## Quick Start
 
-To see Gate in action, check the [hello-world-example](https://github.com/mischov/gate/blob/master/examples/gate/examples/hello_world_example.clj) and the other [examples](https://github.com/mischov/gate/tree/master/examples/gate/examples).
+To see Gate in action, check the [hello-world-example](https://github.com/mischov/gate/blob/master/examples/gate/examples/hello_world_example.clj) and other [examples](https://github.com/mischov/gate/tree/master/examples/gate/examples).
 
 [**Back To Top ⇧**](#contents)
 
@@ -65,7 +68,7 @@ To see Gate in action, check the [hello-world-example](https://github.com/mischo
 
 In order to get started with Gate, you only need to know:
 
-1. [How Gate defines routes.](#routes)
+1. [How to define routes.](#routes)
 2. [How to create a router.](#defrouter)
 3. [How to reduce handler boilerplate.](#defhandler)
 
@@ -194,7 +197,7 @@ For applications with large numbers of routes, Gate's trie-based router appears 
 
 ## Acknowledgements
 
-Gate is fortunate enough to be built upon the shoulders of Compojure and Pedestal, and couldn't ask for a truer pair of giants. 
+Gate owes a lot to Compojure and Pedestal.
 
 [**Back To Top ⇧**](#contents)
 
