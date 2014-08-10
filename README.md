@@ -1,6 +1,6 @@
 # Gate
 
-Gate is a web routing library for Ring and Clojure.
+Gate is an HTTP routing library for Ring and Clojure.
 
 ```clojure
 (ns hello-world
