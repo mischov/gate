@@ -60,7 +60,7 @@ Gate does work, however, and is waiting for you to experiment with it.
 
 ## Quick Start
 
-To see Gate in action, check the [hello-world-example](https://github.com/mischov/gate/blob/master/examples/gate/examples/hello_world_example.clj) and other [examples](https://github.com/mischov/gate/tree/master/examples/gate/examples).
+To see Gate in action, check the [hello-world-example](https://github.com/mischov/gate/blob/master/examples/gate/examples/hello_world_example.clj) and [other examples](https://github.com/mischov/gate/tree/master/examples/gate/examples).
 
 [**Back To Top ⇧**](#contents)
 
