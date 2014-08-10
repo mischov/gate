@@ -5,7 +5,7 @@
 (defn split-path
   [^String path]
   
-  (string/split path #"/"))
+  (string/split path #"/|(?<!/)(?=\*)"))
 
 
 (defn create-node
@@ -63,6 +63,23 @@
     last-splat))
 
 
+(defn partial-literal?
+  [trie ^String segment]
+
+  (let [ks (keys trie)
+        matches? (map #(when (string? %)
+                         (when (.startsWith segment ^String %)
+                           %))
+                      ks)]
+    (some identity matches?)))
+
+
+(defn partial-variable
+  [^String segment ^String part-lit]
+  
+  (.replace segment part-lit ""))
+
+
 (defn search-trie
   [trie segments]
   
@@ -72,11 +89,14 @@
          lsplat nil
          params []]
     (if-not segment
-      [(get trie :methods) params]
+      [(or (get trie :methods)
+           (get-in trie [:splat :methods])) params]
       (let [literal (get trie segment)
+            partial-literal #(partial-literal? trie segment)
             variable (get trie :var)
             splat (get trie :splat)
-            last-splat (get-last-splat splat lsplat params segments)]
+            last-splat (get-last-splat splat lsplat
+                                       params segments)]
         (cond
          (empty? segment)
            (recur (fnext segments)
@@ -91,6 +111,15 @@
                   literal
                   last-splat
                   params)
+
+         (partial-literal)
+           (let [plit (partial-literal)
+                 pvar (partial-variable segment plit)]
+             (recur pvar
+                    segments
+                    (get trie plit)
+                    last-splat
+                    (conj params pvar)))
            
          variable
            (recur (fnext segments)
@@ -107,5 +136,5 @@
            [(get lsplat :methods)
             (conj (get lsplat :params)
                   (string/join "/" (get lsplat :segments)))]
-           
+             
          :else nil)))))

@@ -2,7 +2,7 @@
   (:require [gate.router.trie :as trie]
             [gate.router.resources :refer [get-resource-matching]]
             [gate.router.preware :refer [get-preware]]
-            [gate.util.response.not-found :refer [add-not-found]]))
+            [gate.util.response.not-found :refer [return-404]]))
 
 
 (defn get-route-matching
@@ -26,8 +26,7 @@
     (let [router-trie (trie/routes->trie routes)
           preware (get-preware settings)]
       (fn [request]
-        (let [request (-> (if preware (preware request) request)
-                          (add-not-found settings))]
+        (let [request (-> (if preware (preware request) request))]
           (or (get-resource-matching request settings)
               (get-route-matching request router-trie)
-              (:not-found request)))))))
+              (return-404 request settings)))))))

@@ -3,7 +3,7 @@
   (:import [java.util.regex Pattern]))
 
 
-;; Taken (mostly) from Pedestal (io.pedestal.service.http.route)
+; Originally adapted from Pedestal.
 
 
 (defn ^:private parse-path-token
@@ -23,6 +23,18 @@
         (let [key (keyword token)]
           (-> result
               (update-in [:path-parts] conj key)
+              (update-in [:path-params] conj key))))
+
+    #"^([^\*]+)\*$" :>>
+      (fn [[_ const]]
+        (-> result
+            (update-in [:path-parts] conj const)))
+
+    #"^([^\*]+)\*(.+)$" :>>
+      (fn [[_ const token]]
+        (let [key (keyword token)]
+          (-> result
+              (update-in [:path-parts] conj const key)
               (update-in [:path-params] conj key))))
       
     (update-in result [:path-parts] conj string)))
