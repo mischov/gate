@@ -31,7 +31,7 @@ Gate is an HTTP routing library for Ring and Clojure.
 Add the following dependency to your `project.clj` file:
 
 ```clojure
-[gate "0.0.16"]
+[gate "0.0.17"]
 ```
 [**Back To Top ⇧**](#contents)
 
