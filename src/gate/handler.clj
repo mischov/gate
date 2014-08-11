@@ -1,6 +1,6 @@
 (ns gate.handler
   (:refer-clojure :exclude [read])
-  (:require [gate.handler.param :as param]
+  (:require [gate.handler.params :refer [parse-param]]
             [ring.util.response :as ring]))
 
 
@@ -8,15 +8,10 @@
 ;; by Compojure (compojure.core)
 
 
-(defn read-param-as
-  "When there's a param and you know how to read it,
-   read it. If you can't read it, give it back."
+(defn parse-param-as
   [param-type param]
-  
-  (let [read (get param/readers param-type)] 
-    (if (and read param)
-      (read param)
-      param)))
+
+  (parse-param param-type param))
 
 
 (defn get-param
@@ -32,9 +27,9 @@
   "Attempts to convert the parameter matching sym
    into the indicated type, and associate the result
    with sym in the bindings."
-  [bindings req [sym ptype]]
+  [bindings req sym param-type]
   
-    (assoc bindings sym `(read-param-as ~ptype ~(get-param req sym))))
+    (assoc bindings sym `(parse-param-as ~param-type ~(get-param req sym))))
 
 
 (defn assoc-symbol
@@ -55,18 +50,20 @@
    bound to a symbol that follows they keyword :as."
   [args req]
   
-  (loop [args args
+  (loop [[sym & remainder] args
          bindings {}]
-    (if-let [sym (first args)]
+    (if sym
       (cond
        (= :as sym)
-         (recur (nnext args) (assoc bindings (second args) req))
-         
-       (vector? sym)
-         (recur (next args) (assoc-symbol-as bindings req sym))
+         (recur (next remainder)
+                (assoc bindings (first remainder) req))
          
        (symbol? sym)
-         (recur (next args) (assoc-symbol bindings req sym))
+         (if (= :- (first remainder))
+           (recur (nnext remainder)
+                  (assoc-symbol-as bindings req sym (second remainder)))
+           (recur remainder
+                  (assoc-symbol bindings req sym)))
          
        :else
          (throw (Exception. (str "Unexpected binding: " sym))))
