@@ -142,15 +142,6 @@ These macros will be (partially) familiar to Compojure users since they reimplem
 
 
 ```clojure
-
-(def birthday-greeter
-  (handler
-    [username age :- Long]
-    (str "Happy birthday, " username "! "
-         "It seems like just yesterday you were " (- age 1) "....")))
-
-; or
-  
 (defhandler birthday-greeter
   [username age :- Long]
    
