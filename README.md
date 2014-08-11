@@ -101,7 +101,7 @@ For more about routes, check [wiki/Routes](https://github.com/mischov/gate/wiki/
 
 ### defrouter
 
-Provided a router name, a sequence of routes, and optionally a map of router settings, defrouter (`gate/defrouter`) binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
+Provided a router name, a sequence of routes, and optionally a map of router settings, `defrouter` binds a router to the router name. A router, in turn, accepts a Ring request and returns an appropriate Ring response.
 
 ```clojure
 (defrouter app
@@ -127,33 +127,45 @@ For a full list of possible router settings, check [wiki/Router-Settings](https:
 A Gate handler is just any function that accepts a Ring request and returns something.
 
 ```clojure
-(defn personalized-greeter
+(defn birthday-greeter
   [request]
-  (let [visitor-name (get-in request [:params :visitor-name])]
-    (str "Hello, " visitor-name "!")))
+
+  (let [username (get-in request [:params :username])
+        age (Long/parseLong (get-in request [:params :age]))]
+	(str "Happy birthday, " username "! "
+	     "It seems like just yesterday you were " (- age 1) "....")))
 ```
 
-However, manually pulling the params out of the request like that becomes very old, very fast.
+However, the boilerplate from getting and coercing params really adds up, so Gate provides the convenience macros `handler` and `defmacro`.
 
-To combat all that boilerplate, Gate introduces the convenience macros handler and defhandler. These macros will be familiar to Compojure users since they reimplement much Compojure's request-map destructuring, but they are subtly different (and also decomplected out of route definition).
+These macros will be (partially) familiar to Compojure users since they reimplement much of Compojure's request-map destructuring.
+
 
 ```clojure
 
-(def personalized-greeter
-  (handler [visitor-name] (str "Hello, " visitor-name "!")))
+(def birthday-greeter
+  (handler
+    [username age :- Long]
+    (str "Happy birthday, " username "! "
+         "It seems like just yesterday you were " (- age 1) "....")))
 
 ; or
   
-(defhandler personalized-greeter
-  [visitor-name]
-  (str "Hello, " visitor-name "!"))
+(defhandler birthday-greeter
+  [username age :- Long]
+   
+  (str "Happy birthday, " username "! "
+       "It seems like just yesterday you were " (- age 1) "...."))
 ```
 
-One of the most important differences between handler/defhandler and Compojure is that handler/defhandler allows parameters to be coerced from strings to other types of data at the time that they are extracted from :params.
+The example above illustrates one of the most useful differences between `handler`/`defhandler` and Compojure, which is that `handler`/`defhandler` allow you to coerce parameters from strings to other types of data at the time that they are extracted from :params.
 
 ```clojure
 (defhandler arithmetic
-  [op [n1 :num] [n2 :num]]
+  [op
+   n1 :- Number
+   n2 :- Number]
+   
   (case op
     "add" (str (+ n1 n2))
     "sub" (str (- n1 n2))
@@ -162,8 +174,7 @@ One of the most important differences between handler/defhandler and Compojure i
     (str "Operation '" op "' not recognized.")))
 
 (defrouter app
-  [{:name :arith
-    :path "/:op/:n1/:n2"
+  [{:path "/:op/:n1/:n2"
     :get  arithmetic}])
 
 ; (app {:request-method :get :uri "/add/2/2"})
@@ -179,7 +190,7 @@ One of the most important differences between handler/defhandler and Compojure i
 ;    :body "Operation 'raise' not recognized."}
 ```
 
-For more about handler/defhandler and param coercion, see [wiki/Handlers](https://github.com/mischov/gate/wiki/Handlers).
+For more about `handler`/`defhandler` or param coercion, see [wiki/Handlers](https://github.com/mischov/gate/wiki/Handlers).
 
 [**Back To Top ⇧**](#contents)
 
