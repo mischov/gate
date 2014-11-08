@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[ring/ring-core "1.2.1"]
                  [org.clojure/tools.reader "0.8.3"]
-                 [potemkin "0.3.4"]]
+                 [potemkin "0.3.11"]]
   :plugins [[lein-expectations "0.0.7"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
                                   [expectations "1.4.52"]

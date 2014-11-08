@@ -25,8 +25,8 @@
 ;; defhandler named handler.
 
 ;; A Gate router takes a list of routes and an optional map
-;; of options and returns a function that attempts to find
-;; a route matching a Ring request.
+;; of router settings and returns a function that attempts
+;; to find a route matching a Ring request.
 
 (defrouter app
   [{:name :hello-world
@@ -36,7 +36,7 @@
                {:name :hello-name
                 :path "/:name"
                 :get hello-name}]}]
-  {:404-handler (handler [] "Nothing here to see! Carry on!")})
+  {:not-found (handler [] "Nothing here to see! Carry on!")})
 
 ;; (app {:uri "/hello" :request-method :get})
 ;; => {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"}, :body "Hello, World!"}

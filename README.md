@@ -9,7 +9,7 @@ Gate is an HTTP routing library for Ring and Clojure.
 (defrouter app
   [{:path "/"
     :get  (handler [] "<h1>Hello, World!</h1>")}]
-  {:404-handler (handler [] "<h1>404</h1><p>Not Found</p>")}) 
+  {:not-found (handler [] "<h1>404</h1><p>Not Found</p>")}) 
 ```
 
 ## Contents
@@ -107,7 +107,7 @@ Provided a router name, a sequence of routes, and optionally a map of router set
 (defrouter app
   [{:path "/"
     :get  (handler [] "I'm an index.")}]
-  {:404-handler (handler [] "I can't find what you're looking for.")})
+  {:not-found (handler [] "I can't find what you're looking for.")})
 
 ; (app {:request-method :get :uri "/"})
 ; > {:status 200, :headers {"Content-Type" "text/html; charset=utf-8"},

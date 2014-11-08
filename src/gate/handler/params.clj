@@ -84,6 +84,12 @@
   (safely parse-number param))
 
 
+(defmethod parse-param java.util.UUID
+  [_ param]
+
+  (safely #(java.util.UUID/fromString %) param))
+
+
 (defmethod parse-param Edn
   [_ param]
 
