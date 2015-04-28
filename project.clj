@@ -3,7 +3,8 @@
   :url "https://github.com/mischov/gate"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[ring/ring-core "1.2.1"]
+  :dependencies [[org.clojure/tools.macro "0.1.2"]
+                 [ring/ring-core "1.2.1"]
                  [potemkin "0.3.11"]]
   :plugins [[lein-expectations "0.0.7"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]

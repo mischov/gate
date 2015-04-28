@@ -1,5 +1,6 @@
 (ns gate
   (:require [potemkin :refer [import-fn import-macro]]
+            [clojure.tools.macro :refer [name-with-attributes]]
             [gate.routes.dna]
             [gate.routes]
             [gate.router]
@@ -20,12 +21,16 @@
    but expands routes at compile time.
 
    For performance reasons, you want routes expanded at compile
-   time."
-  [name routes & [router-settings]]
+   time.
+
+   Accepts docstrings."
+  [name & args]
   
-  `(let [dna# (init-dna ~router-settings)]
+  (let [[name [routes & [router-settings]]] (name-with-attributes name args)]
+
+    `(let [dna# (init-dna ~router-settings)]
      (def ~name
-       (create-router (expand-routes ~routes dna#) ~router-settings))))
+       (create-router (expand-routes ~routes dna#) ~router-settings)))))
 
 
 (defmacro handler
@@ -45,8 +50,12 @@
 
 
 (defmacro defhandler
-  "Convinience macro for defining named Gate handlers."
-  [name req-bindings & body]
+  "Convinience macro for defining named Gate handlers.
+
+   Accepts docstrings."
+  [name & args]
   
-  `(def ~name
-     ~(create-handler req-bindings body)))
+  (let [[name [req-bindings & body]] (name-with-attributes name args)]
+    
+    `(def ~name
+     ~(create-handler req-bindings body))))
